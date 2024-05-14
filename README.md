@@ -8,6 +8,7 @@ npx prisma init --datasource-provider postgresql
 npm install @prisma/client
 npm install next-auth
 npx shadcn-ui@latest init
+npm install date-fns --save
 ```
 
 ## Getting Started
