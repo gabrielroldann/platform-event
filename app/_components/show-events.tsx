@@ -37,12 +37,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { SaveEvent } from "../_actions/save-event";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 interface ShowEventsProps {
   events: Event[];
 }
 
 const ShowEvents = ({ events }: ShowEventsProps) => {
+  const { data } = useSession();
+  const [loading, setLoading] = useState(false);
   // TODO: Verificar e organizar as datas (startDate e endDate) dos eventos
   // TODO: Passar o eventMaxParticipants para Number
 
@@ -52,12 +58,10 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
   const [eventDescription, setEventDescription] = useState("");
   const [eventStartDate, setEventStartDate] = useState<Date>(new Date());
   const [eventEndDate, setEventEndDate] = useState<Date>(
-    addDays(new Date(), 1)
+    addDays(new Date(), 7)
   );
-  const [eventLocation, setEventLocation] = useState("");
+  const [eventLocation, setEventLocation] = useState("Presencial");
   const [eventMaxParticipants, setEventMaxParticipants] = useState("Ilimitado");
-
-  // const [range, setRange] = useState<Date | undefined>();
 
   const initiallySelectedDates = [eventStartDate, eventEndDate];
   const [selectedDates, setSelectedDates] = useState(initiallySelectedDates);
@@ -104,6 +108,34 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
     "10000",
   ];
 
+  const handleCreateEvent = async () => {
+    try {
+      if (!data) return null;
+
+      setLoading(true);
+
+      const newEvent = await SaveEvent({
+        title: eventTitle,
+        description: eventDescription,
+        startDate: eventStartDate,
+        endDate: eventEndDate,
+        location: eventLocation,
+        maxParticipants: Number(eventMaxParticipants),
+        userId: (data!.user as any).id,
+      });
+
+      toast.success("Evento criado com sucesso!", {
+        duration: 2000,
+      });
+    } catch (error) {
+      toast.error("Não foi possível criar o event, tente novamente.", {
+        duration: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       {listEvents > 0 ? (
@@ -122,8 +154,8 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
       ) : (
         <div className="w-full">
           <div className="w-full mt-6 flex flex-col gap-2 items-center justify-center">
-            <p className="opacity-35 font-light">
-              No momento não tem nenhum evento
+            <p className="opacity-40 font-light text-muted-foreground">
+              Nenhum evento registrado no momento
             </p>
             <Dialog>
               <DialogTrigger asChild>
@@ -171,7 +203,10 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
                   </div>
                   {/* presencial/online */}
                   <div>
-                    <RadioGroup defaultValue="Presencial">
+                    <RadioGroup
+                      defaultValue={eventLocation}
+                      onValueChange={setEventLocation}
+                    >
                       <div className="flex gap-2 items-center">
                         <RadioGroupItem id="Presencial" value="Presencial" />
                         <Label
@@ -226,19 +261,11 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
                       onSelect={(dates) => setSelectedDates(dates ?? [])}
                       fromDate={new Date()}
                       styles={{
-                        head_cell: {
-                          width: "50px",
+                        caption: {
                           textTransform: "capitalize",
                         },
-                        table: {
-                          maxWidth: "none",
-                          width: "100%",
-                        },
-                        cell: {
-                          width: "100%",
-                        },
-                        button: {
-                          width: "100%",
+                        head_cell: {
+                          textTransform: "capitalize",
                         },
                         nav_button_previous: {
                           width: "32px",
@@ -248,15 +275,19 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
                           width: "32px",
                           height: "32px",
                         },
-                        caption: {
-                          textTransform: "capitalize",
-                        },
                       }}
                     />
                   </div>
                 </div>
                 <DialogFooter className="mt-4">
-                  <Button className="w-full text-base font-normal p-0 px-8 py-5 self-center">
+                  <Button
+                    disabled={loading}
+                    className="w-full text-base font-normal p-0 px-8 py-5 self-center flex gap-2"
+                    onClick={handleCreateEvent}
+                  >
+                    {loading ? (
+                      <ReloadIcon className="w-4 h-4 animate-spin" />
+                    ) : null}
                     Criar Evento
                   </Button>
                 </DialogFooter>
