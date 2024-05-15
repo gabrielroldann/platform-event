@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fredoka } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "./_providers/auth";
+import { Toaster } from "./_components/ui/sonner";
 
 const fredoka = Fredoka({ subsets: ["latin"] });
 
@@ -18,7 +19,15 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={`${fredoka.className}`}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          {children}
+          <Toaster
+            richColors
+            expand={false}
+            visibleToasts={2}
+            position={"bottom-center"}
+          />
+        </AuthProvider>
       </body>
     </html>
   );
