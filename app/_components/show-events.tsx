@@ -114,21 +114,35 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
 
       setLoading(true);
 
-      const newEvent = await SaveEvent({
-        title: eventTitle,
-        description: eventDescription,
-        startDate: eventStartDate,
-        endDate: eventEndDate,
-        location: eventLocation,
-        maxParticipants: Number(eventMaxParticipants),
-        userId: (data!.user as any).id,
+      const newEvent = new Promise((resolve, reject) => {
+        SaveEvent({
+          title: eventTitle,
+          description: eventDescription,
+          startDate: eventStartDate,
+          endDate: eventEndDate,
+          location: eventLocation,
+          maxParticipants: Number(eventMaxParticipants),
+          userId: (data!.user as any).id,
+        })
+          .then((newEvent) => {
+            resolve(newEvent);
+          })
+          .catch((error) => {
+            reject(error);
+          });
       });
 
-      toast.success("Evento criado com sucesso!", {
-        duration: 2000,
+      // toast.success("Evento criado com sucesso!", {
+      //   duration: 2000,
+      // });
+
+      toast.promise(newEvent, {
+        loading: "Criando evento...",
+        success: "Evento criado com sucesso!",
+        error: "Não foi possível criar o evento, tente novamente.",
       });
     } catch (error) {
-      toast.error("Não foi possível criar o event, tente novamente.", {
+      toast.error("Não foi possível criar o evento, tente novamente.", {
         duration: 3000,
       });
     } finally {
