@@ -15,6 +15,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -28,12 +29,23 @@ import { Calendar } from "./ui/calendar";
 import { ptBR } from "date-fns/locale";
 import { DateRange } from "react-day-picker";
 import { addDays } from "date-fns";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface ShowEventsProps {
   events: Event[];
 }
 
 const ShowEvents = ({ events }: ShowEventsProps) => {
+  // TODO: Verificar e organizar as datas (startDate e endDate) dos eventos
+  // TODO: Passar o eventMaxParticipants para Number
+
   const listEvents = events.length;
 
   const [eventTitle, setEventTitle] = useState("");
@@ -43,7 +55,7 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
     addDays(new Date(), 1)
   );
   const [eventLocation, setEventLocation] = useState("");
-  const [eventMaxParticipants, setEventMaxParticipants] = useState(0);
+  const [eventMaxParticipants, setEventMaxParticipants] = useState("Ilimitado");
 
   // const [range, setRange] = useState<Date | undefined>();
 
@@ -51,9 +63,45 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
   const [selectedDates, setSelectedDates] = useState(initiallySelectedDates);
 
   const numOfParticipants = [
-    10, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750,
-    800, 850, 900, 950, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000,
-    5500, 6000, 6500, 7000, 7500, 8000, 8500, 9000, 9500, 10000,
+    "Ilimitado",
+    "10",
+    "100",
+    "150",
+    "200",
+    "250",
+    "300",
+    "350",
+    "400",
+    "450",
+    "500",
+    "550",
+    "600",
+    "650",
+    "700",
+    "750",
+    "800",
+    "850",
+    "900",
+    "950",
+    "1000",
+    "1500",
+    "2000",
+    "2500",
+    "3000",
+    "3500",
+    "4000",
+    "4500",
+    "5000",
+    "5500",
+    "6000",
+    "6500",
+    "7000",
+    "7500",
+    "8000",
+    "8500",
+    "9000",
+    "9500",
+    "10000",
   ];
 
   return (
@@ -83,9 +131,9 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
                   Criar Evento
                 </Button>
               </DialogTrigger>
-              <DialogContent className="box-border">
+              <DialogContent className="w-auto">
                 <DialogHeader>
-                  <DialogTitle className="text-xl font-normal">
+                  <DialogTitle className="text-2xl font-normal">
                     Criar um Evento
                   </DialogTitle>
                   <DialogDescription>
@@ -141,8 +189,34 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
                       </div>
                     </RadioGroup>
                   </div>
+                  {/* number of participants */}
+                  <div className="flex flex-col gap-2">
+                    <Label
+                      htmlFor="numberOfParticipants"
+                      className="font-medium text-sm"
+                    >
+                      Número máximo de participantes do evento
+                    </Label>
+                    <Select
+                      value={eventMaxParticipants}
+                      onValueChange={setEventMaxParticipants}
+                    >
+                      <SelectTrigger id="numberOfParticipants">
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {numOfParticipants.map((num) => (
+                            <SelectItem key={num} value={num}>
+                              {num}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   {/* dates */}
-                  <div className="w-full flex items-center justify-center">
+                  <div className="mt-3 w-full flex items-center justify-center">
                     <Calendar
                       mode="multiple"
                       className="w-full p-0"
@@ -153,7 +227,7 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
                       fromDate={new Date()}
                       styles={{
                         head_cell: {
-                          width: "65px",
+                          width: "50px",
                           textTransform: "capitalize",
                         },
                         table: {
@@ -181,6 +255,11 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
                     />
                   </div>
                 </div>
+                <DialogFooter className="mt-4">
+                  <Button className="w-full text-base font-normal p-0 px-8 py-5 self-center">
+                    Criar Evento
+                  </Button>
+                </DialogFooter>
               </DialogContent>
             </Dialog>
             {/* Mobile Drawer
