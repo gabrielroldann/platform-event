@@ -66,57 +66,11 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
   const initiallySelectedDates = [eventStartDate, eventEndDate];
   const [selectedDates, setSelectedDates] = useState(initiallySelectedDates);
 
-  const numOfParticipants = [
-    "Ilimitado",
-    "10",
-    "100",
-    "150",
-    "200",
-    "250",
-    "300",
-    "350",
-    "400",
-    "450",
-    "500",
-    "550",
-    "600",
-    "650",
-    "700",
-    "750",
-    "800",
-    "850",
-    "900",
-    "950",
-    "1000",
-    "1500",
-    "2000",
-    "2500",
-    "3000",
-    "3500",
-    "4000",
-    "4500",
-    "5000",
-    "5500",
-    "6000",
-    "6500",
-    "7000",
-    "7500",
-    "8000",
-    "8500",
-    "9000",
-    "9500",
-    "10000",
-  ];
-
   const handleCreateEvent = async () => {
     try {
       // if (!data) return null;
 
       setLoading(true);
-
-      // if (eventMaxParticipants === "Ilimitado") {
-      //   setEventMaxParticipants("99999999999999");
-      // }
 
       const newEvent = await SaveEvent({
         title: eventTitle,
@@ -144,7 +98,7 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
   return (
     <div>
       {listEvents > 0 ? (
-        <div>
+        <div className="mt-6">
           {events.map((event) => (
             <Card key={event.id}>
               <CardHeader>
@@ -216,14 +170,17 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
                         <RadioGroupItem id="Presencial" value="Presencial" />
                         <Label
                           htmlFor="Presencial"
-                          className="font-medium text-sm"
+                          className="font-medium text-sm hover:cursor-pointer"
                         >
                           Presencial
                         </Label>
                       </div>
                       <div className="flex gap-2 items-center">
                         <RadioGroupItem id="Online" value="Online" />
-                        <Label htmlFor="Online" className="font-medium text-sm">
+                        <Label
+                          htmlFor="Online"
+                          className="font-medium text-sm hover:cursor-pointer"
+                        >
                           Online
                         </Label>
                       </div>
