@@ -39,8 +39,8 @@ import {
 } from "./ui/select";
 import { SaveEvent } from "../_actions/save-event";
 import { useSession } from "next-auth/react";
-import { toast } from "sonner";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { toast } from "sonner";
 
 interface ShowEventsProps {
   events: Event[];
@@ -61,7 +61,7 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
     addDays(new Date(), 7)
   );
   const [eventLocation, setEventLocation] = useState("Presencial");
-  const [eventMaxParticipants, setEventMaxParticipants] = useState("Ilimitado");
+  // const [eventMaxParticipants, setEventMaxParticipants] = useState("Ilimitado");
 
   const initiallySelectedDates = [eventStartDate, eventEndDate];
   const [selectedDates, setSelectedDates] = useState(initiallySelectedDates);
@@ -110,41 +110,32 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
 
   const handleCreateEvent = async () => {
     try {
-      if (!data) return null;
+      // if (!data) return null;
 
       setLoading(true);
 
-      const newEvent = new Promise((resolve, reject) => {
-        SaveEvent({
-          title: eventTitle,
-          description: eventDescription,
-          startDate: eventStartDate,
-          endDate: eventEndDate,
-          location: eventLocation,
-          maxParticipants: Number(eventMaxParticipants),
-          userId: (data!.user as any).id,
-        })
-          .then((newEvent) => {
-            resolve(newEvent);
-          })
-          .catch((error) => {
-            reject(error);
-          });
+      // if (eventMaxParticipants === "Ilimitado") {
+      //   setEventMaxParticipants("99999999999999");
+      // }
+
+      const newEvent = await SaveEvent({
+        title: eventTitle,
+        description: eventDescription,
+        location: eventLocation,
+        // maxParticipants: Number(eventMaxParticipants),
+        startDate: selectedDates[0],
+        endDate: selectedDates[1],
+        userId: (data!.user as any).id,
       });
 
-      // toast.success("Evento criado com sucesso!", {
-      //   duration: 2000,
-      // });
-
-      toast.promise(newEvent, {
-        loading: "Criando evento...",
-        success: "Evento criado com sucesso!",
-        error: "Não foi possível criar o evento, tente novamente.",
+      toast.success("Evento criado com sucesso!", {
+        duration: 2000,
       });
     } catch (error) {
-      toast.error("Não foi possível criar o evento, tente novamente.", {
-        duration: 3000,
+      toast.error("Erro ao criar evento. Tente novamente mais tarde.", {
+        duration: 2000,
       });
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -238,32 +229,7 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
                       </div>
                     </RadioGroup>
                   </div>
-                  {/* number of participants */}
-                  <div className="flex flex-col gap-2">
-                    <Label
-                      htmlFor="numberOfParticipants"
-                      className="font-medium text-sm"
-                    >
-                      Número máximo de participantes do evento
-                    </Label>
-                    <Select
-                      value={eventMaxParticipants}
-                      onValueChange={setEventMaxParticipants}
-                    >
-                      <SelectTrigger id="numberOfParticipants">
-                        <SelectValue placeholder="Selecione" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {numOfParticipants.map((num) => (
-                            <SelectItem key={num} value={num}>
-                              {num}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
+
                   {/* dates */}
                   <div className="mt-3 w-full flex items-center justify-center">
                     <Calendar
@@ -295,7 +261,12 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
                 </div>
                 <DialogFooter className="mt-4">
                   <Button
-                    disabled={loading}
+                    disabled={
+                      loading ||
+                      !eventTitle ||
+                      !eventDescription ||
+                      !eventLocation
+                    }
                     className="w-full text-base font-normal p-0 px-8 py-5 self-center flex gap-2"
                     onClick={handleCreateEvent}
                   >

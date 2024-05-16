@@ -21,10 +21,10 @@ interface LoginPageProps {
 }
 
 const LoginPage = ({ types }: LoginPageProps) => {
-  const [selectedType, setSelectedType] = useState("");
+  // const [selectedType, setSelectedType] = useState("");
   const [loading, setLoading] = useState(false);
 
-  console.log(selectedType);
+  // console.log(selectedType);
 
   const handleLogin = () => {
     try {
@@ -47,7 +47,7 @@ const LoginPage = ({ types }: LoginPageProps) => {
           Selecione o tipo de usuário
           <br /> para efetuar seu login
         </p>
-        <Select onValueChange={setSelectedType} value={selectedType}>
+        {/* <Select onValueChange={setSelectedType} value={selectedType}>
           <SelectTrigger>
             <SelectValue placeholder={"Tipo de Usuário"} />
           </SelectTrigger>
@@ -60,9 +60,9 @@ const LoginPage = ({ types }: LoginPageProps) => {
               ))}
             </SelectGroup>
           </SelectContent>
-        </Select>
+        </Select> */}
         <Button
-          disabled={!selectedType}
+          // disabled={!selectedType}
           className="px-5 py-4 font-normal text-sm w-full flex justify-center items-center gap-2"
           onClick={handleLogin}
         >
