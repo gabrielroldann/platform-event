@@ -11,10 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { TypeUser } from "@prisma/client";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { TypeUser } from "@prisma/client";
 
 interface LoginPageProps {
   types: TypeUser[];
