@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Fredoka } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "./_providers/auth";
-import { Toaster } from "./_components/ui/sonner";
+import { Toaster } from "sonner";
 
 const fredoka = Fredoka({ subsets: ["latin"] });
 
