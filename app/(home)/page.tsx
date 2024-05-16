@@ -5,6 +5,7 @@ import { authOptions } from "../_lib/auth";
 import { db } from "../_lib/prisma";
 import LoginPage from "../_components/login";
 import ShowEvents from "../_components/show-events";
+import LogoutButton from "../_components/logout-button";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -18,7 +19,11 @@ export default async function Home() {
     <div className="p-5 m-0">
       {session ? (
         <div>
-          <h1>Olá, {session!.user!.name}</h1>
+          <div className="flex gap-2 items-center">
+            <h1>Olá, {session!.user!.name}</h1>
+            <LogoutButton />
+          </div>
+
           <ShowEvents events={events} />
         </div>
       ) : (
