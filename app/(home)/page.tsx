@@ -19,8 +19,8 @@ export default async function Home() {
     <div className="p-5 m-0">
       {session ? (
         <div>
-          <div className="flex gap-2 items-center">
-            <h1>Olá, {session!.user!.name}</h1>
+          <div className="flex flex-col gap-2 justify-center">
+            <h1 className="text-2xl">Olá, {session!.user!.name}</h1>
             <LogoutButton />
           </div>
 
