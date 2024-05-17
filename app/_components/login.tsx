@@ -43,26 +43,7 @@ const LoginPage = ({ types }: LoginPageProps) => {
         <CardTitle className="font-medium text-lg">Faça seu Login</CardTitle>
       </CardHeader>
       <CardContent className="p-0 px-5 py-4 flex flex-col gap-2">
-        <p className="text-center">
-          Selecione o tipo de usuário
-          <br /> para efetuar seu login
-        </p>
-        {/* <Select onValueChange={setSelectedType} value={selectedType}>
-          <SelectTrigger>
-            <SelectValue placeholder={"Tipo de Usuário"} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {types.map((type: any) => (
-                <SelectItem key={type.id} value={type.id}>
-                  {type.name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select> */}
         <Button
-          // disabled={!selectedType}
           className="px-5 py-4 font-normal text-sm w-full flex justify-center items-center gap-2"
           onClick={handleLogin}
         >
