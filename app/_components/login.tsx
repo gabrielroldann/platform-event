@@ -13,8 +13,8 @@ import {
 } from "./ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useState } from "react";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import { TypeUser } from "@prisma/client";
+import { LogIn, RefreshCcw } from "lucide-react";
 
 interface LoginPageProps {
   types: TypeUser[];
@@ -44,10 +44,11 @@ const LoginPage = ({ types }: LoginPageProps) => {
       </CardHeader>
       <CardContent className="p-0 px-5 py-4 flex flex-col gap-2">
         <Button
-          className="px-5 py-4 font-normal text-sm w-full flex justify-center items-center gap-2"
+          className="text-xl font-normal px-8 py-6 flex gap-2 item-center"
           onClick={handleLogin}
         >
-          {loading ? <ReloadIcon className="w-4 h-4 animate-spin" /> : null}
+          {loading ? <RefreshCcw className="w-4 h-4 animate-spin" /> : null}
+          <LogIn size={18} />
           Login com Google
         </Button>
       </CardContent>
