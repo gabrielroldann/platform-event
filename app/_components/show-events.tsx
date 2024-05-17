@@ -39,8 +39,8 @@ import {
 } from "./ui/select";
 import { SaveEvent } from "../_actions/save-event";
 import { useSession } from "next-auth/react";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
+import { RefreshCcw } from "lucide-react";
 
 interface ShowEventsProps {
   events: Event[];
@@ -112,13 +112,13 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
         </div>
       ) : (
         <div className="w-full">
-          <div className="w-full mt-6 flex flex-col gap-2 items-center justify-center">
-            <p className="opacity-40 font-light text-muted-foreground">
+          <div className="w-full mt-6 flex flex-col gap-3  items-center justify-center">
+            <p className="opacity-55 font-normal text-xl text-muted-foreground">
               Nenhum evento registrado no momento
             </p>
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="font-light p-0 m-0 px-4">
+                <Button className="text-lg font-normal px-7 py-6 flex">
                   Criar Evento
                 </Button>
               </DialogTrigger>
@@ -161,10 +161,14 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
                     />
                   </div>
                   {/* presencial/online */}
-                  <div>
+                  <div className="flex flex-col gap-1">
+                    <Label htmlFor="location" className="font-medium text-sm">
+                      Qual é o formato do evento?
+                    </Label>
                     <RadioGroup
                       defaultValue={eventLocation}
                       onValueChange={setEventLocation}
+                      id="location"
                     >
                       <div className="flex gap-2 items-center">
                         <RadioGroupItem id="Presencial" value="Presencial" />
@@ -228,7 +232,7 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
                     onClick={handleCreateEvent}
                   >
                     {loading ? (
-                      <ReloadIcon className="w-4 h-4 animate-spin" />
+                      <RefreshCcw className="w-4 h-4 animate-spin" />
                     ) : null}
                     Criar Evento
                   </Button>
