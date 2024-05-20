@@ -18,7 +18,8 @@ interface SearchProps {
 const Search = ({ events }: SearchProps) => {
   const [searchValue, setSearchValue] = useState<string>("");
   return (
-    <div>
+    <div className="flex flex-col gap-2">
+      <h1 className="text-xl font-normal">Pesquise um evento</h1>
       <Command className="border">
         <CommandInput placeholder="Nome do evento" className="w-full" />
         <CommandList>
