@@ -12,7 +12,7 @@ const LogoutButton = () => {
     <div>
       <Button
         onClick={handleLogout}
-        className="text-xl font-normal px-8 py-6 flex gap-2 item-center"
+        className="text-base font-normal px-6 flex gap-2 item-center"
       >
         <LogOut size={18} />
         Sair

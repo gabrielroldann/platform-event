@@ -112,13 +112,13 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
         </div>
       ) : (
         <div className="w-full">
-          <div className="w-full mt-6 flex flex-col gap-3  items-center justify-center">
+          <div className="w-full mt-6 flex flex-col gap-3 items-center justify-center">
             <p className="opacity-55 font-normal text-xl text-muted-foreground">
               Nenhum evento registrado no momento
             </p>
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="text-lg font-normal px-7 py-6 flex">
+                <Button className="text-base font-normal px-6 flex">
                   Criar Evento
                 </Button>
               </DialogTrigger>
