@@ -6,7 +6,7 @@ import Search from "./search";
 const Body = async () => {
   const events = await db.event.findMany();
   return (
-    <div>
+    <div className="flex flex-col gap-8">
       <div>
         <Search events={events} />
       </div>
