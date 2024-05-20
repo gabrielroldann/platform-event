@@ -6,6 +6,9 @@ import { db } from "../_lib/prisma";
 import LoginPage from "../_components/login";
 import ShowEvents from "../_components/show-events";
 import LogoutButton from "../_components/logout-button";
+import Header from "../_components/header";
+import uniforlogo from "../public/unifor-logo.png";
+import Body from "../_components/body";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -16,21 +19,15 @@ export default async function Home() {
   console.log(session);
 
   return (
-    <div className="p-5 m-0">
-      {session ? (
-        <div>
-          <div className="flex flex-col gap-2 justify-center">
-            <h1 className="text-2xl">Olá, {session!.user!.name}</h1>
-            <LogoutButton />
-          </div>
-
-          <ShowEvents events={events} />
+    <div>
+      <div className="p-5 px-8 m-0">
+        <Header />
+      </div>
+      <div className="mt-8 w-full flex items-center justify-center">
+        <div className="w-7/12">
+          <Body />
         </div>
-      ) : (
-        <div className="mt-24 flex flex-col gap-2 w-full justify-center items-center">
-          <LoginPage types={types} />
-        </div>
-      )}
+      </div>
     </div>
   );
 }
