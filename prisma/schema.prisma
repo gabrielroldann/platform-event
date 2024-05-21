@@ -49,6 +49,7 @@ model Event {
   startDate       DateTime
   endDate         DateTime
   location        String
+  image           String
   maxParticipants Int?
 
   userId String
