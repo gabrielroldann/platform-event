@@ -3,11 +3,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../_lib/auth";
 import { db } from "../_lib/prisma";
-import LoginPage from "../_components/login";
-import ShowEvents from "../_components/show-events";
-import LogoutButton from "../_components/logout-button";
 import Header from "../_components/header";
-import uniforlogo from "../public/unifor-logo.png";
 import Body from "../_components/body";
 
 export default async function Home() {
