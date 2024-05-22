@@ -43,33 +43,30 @@ model TypeUser {
 }
 
 model Event {
-  id              String   @id @default(cuid())
-  title           String
-  description     String
-  startDate       DateTime
-  endDate         DateTime
-  location        String
-  image           String
-  maxParticipants Int?
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  startDate   DateTime
+  endDate     DateTime?
+  location    String
+  image       String
 
   userId String
 
   User         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  AcademicWork AcademicWork[]
   Subscription Subscription[]
   Diary        Diary[]
 }
 
 model AcademicWork {
-  id          String @id @default(cuid())
+  id          String  @id @default(cuid())
   title       String
-  description String
+  description String?
+  image       String?
 
-  userId  String
-  eventId String
+  userId String
 
   User    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Event   Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
   Rating  Rating[]
   Comment Comment[]
 }

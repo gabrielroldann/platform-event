@@ -4,13 +4,26 @@ import Image from "next/image";
 import uniforlogo from "../../public/uniforlogo.svg";
 import { Button } from "./ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { Avatar, AvatarImage } from "./ui/avatar";
 import { LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import CreateEventDialog from "./dialog-create-event";
 
 const Header = () => {
   const { data } = useSession();
+  const router = useRouter();
 
-  console.log(data);
+  const [open, setOpen] = useState(false);
+
+  console.log("header: " + data);
+
+  const handlePublicarEvento = () => {
+    if (!data) {
+      signIn("google");
+    } else {
+      setOpen(true);
+    }
+  };
 
   const handleLogin = () => {
     signIn("google");
@@ -18,6 +31,7 @@ const Header = () => {
 
   const handleLogout = () => {
     signOut();
+    router.refresh();
   };
 
   return (
@@ -55,9 +69,11 @@ const Header = () => {
           <Button
             variant={"default"}
             className="text-lg font-medium rounded-xl bg-[#044CF4]"
+            onClick={handlePublicarEvento}
           >
             Publicar Evento
           </Button>
+          <CreateEventDialog open={open} setOpen={setOpen} />
           {data ? (
             <div className="flex gap-2 items-center">
               {/* <Avatar>
