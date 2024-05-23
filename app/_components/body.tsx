@@ -14,7 +14,7 @@ const Body = async () => {
       </div>
       <div>
         <div className="flex flex-col gap-2">
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center">
             <h1 className="text-3xl font-medium">Destaques</h1>
             <Button variant={"link"} className="text-xl">
               Ver todos
