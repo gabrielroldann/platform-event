@@ -19,9 +19,9 @@ model User {
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
-  typeUserId    String
+  typeUserId    String?
 
-  TypeUser TypeUser @relation(fields: [typeUserId], references: [id], onDelete: Cascade)
+  TypeUser TypeUser? @relation(fields: [typeUserId], references: [id], onDelete: Cascade)
 
   accounts     Account[]
   sessions     Session[]
@@ -30,6 +30,7 @@ model User {
   Rating       Rating[]
   Subscription Subscription[]
   Comment      Comment[]
+  Diary        Diary[]
 
   @@map("users")
 }
@@ -42,32 +43,30 @@ model TypeUser {
 }
 
 model Event {
-  id              String   @id @default(cuid())
-  title           String
-  description     String
-  startDate       DateTime
-  endDate         DateTime
-  location        String
-  maxParticipants Int?
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  startDate   DateTime
+  endDate     DateTime?
+  location    String
+  image       String
 
   userId String
 
   User         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  AcademicWork AcademicWork[]
   Subscription Subscription[]
   Diary        Diary[]
 }
 
 model AcademicWork {
-  id          String @id @default(cuid())
+  id          String  @id @default(cuid())
   title       String
-  description String
+  description String?
+  image       String?
 
-  userId  String
-  eventId String
+  userId String
 
   User    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Event   Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
   Rating  Rating[]
   Comment Comment[]
 }
@@ -101,7 +100,9 @@ model Diary {
   description String
 
   eventId String
+  userId  String
 
+  User  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   Event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 

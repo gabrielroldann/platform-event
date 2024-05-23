@@ -1,5 +1,16 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Dependencies
+
+```bash
+npm install prisma --save-dev
+npx prisma init --datasource-provider postgresql
+npm install @prisma/client
+npm install next-auth
+npx shadcn-ui@latest init
+npm install date-fns --save
+```
+
 ## Getting Started
 
 First, run the development server:
