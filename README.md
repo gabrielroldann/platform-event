@@ -1,23 +1,20 @@
 
 ## Começar um projeto Next.js no VS Code:
 
-# 01
+# Passos
 - Criar pasta e abrir ela no VS Code
 
-# 02
 - Abrir o terminal e digitar o comando:
 ```bash
 npx create-next-app@latest .
 ```
 - Terá umas perguntas no terminal, aperte Enter até as perguntas terminarem.
 
-# 03
 - Quando o projeto for criado inicie a primeira vez para gerar a pasta .next:
 ```bash
 npm run dev
 ```
 
-# 04
 ...
 
 ## Dependencies
