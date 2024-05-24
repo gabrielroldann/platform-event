@@ -27,10 +27,20 @@ git fetch
 Cole os comandos abaixo no terminal (separadamente):
 ```bash
 npm install prisma --save-dev
+```
+```bash
 npx prisma init --datasource-provider postgresql
+```
+```bash
 npm install @prisma/client
+```
+```bash
 npm install next-auth
+```
+```bash
 npm install date-fns --save
+```
+```bash
 npx shadcn-ui@latest init
 ```
 
