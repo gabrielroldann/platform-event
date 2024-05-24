@@ -22,6 +22,7 @@ import { useSession } from "next-auth/react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { SaveEvent } from "../_actions/save-event";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface CreateEventDialogProps {
   open: boolean;
@@ -30,6 +31,7 @@ interface CreateEventDialogProps {
 
 const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
   const { data } = useSession();
+  const router = useRouter();
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -46,7 +48,20 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
 
   const handleCreateEvent = async () => {
     try {
+      if (
+        !title ||
+        !description ||
+        !location ||
+        !image ||
+        selectedDates.length === 0
+      ) {
+        return toast.info("Preencha todos os campos para criar o evento!", {
+          duration: 2500,
+        });
+      }
+
       setLoading(true);
+
       const newEvent = await SaveEvent({
         title: title,
         description: description,
@@ -57,13 +72,18 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         userId: (data?.user as any).id,
       });
       setLoading(false);
-      setOpen(false);
 
       toast.success("Evento criado com sucesso!", {
         duration: 2500,
       });
+
+      router.push(`/event/${newEvent.id}`);
     } catch (error) {
-      console.error(error);
+      console.log(error);
+      toast.error("Ocorreu um erro ao criar evento, tente novamente!", {
+        description: "Se o erro persistir entre em contato com o suporte.",
+        duration: 2500,
+      });
     } finally {
       setLoading(false);
     }
@@ -170,6 +190,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
             <Button
               variant={"default"}
               className="w-full bg-[#044CF4] flex gap-1"
+              onClick={handleCreateEvent}
             >
               {loading && <ReloadIcon className="w-5 h-5 animate-spin" />}
               Criar Evento
