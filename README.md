@@ -21,10 +21,11 @@ git remote add origin https://github.com/gabrielroldann/platform-event.git
 ```bash
 git fetch
 ```
+- Mude para o Source Control no VS Code na barra lateral esquerda, onde terá as alterações do Git, e aperte no botão Sync Changes e 'Ok' no Pop-Up que vai abrir
 
 ## Dependências
 
-Cole os comandos abaixo no terminal:
+- Cole os comandos abaixo no terminal:
 ```bash
 npm install prisma --save-dev
 ```
@@ -44,10 +45,12 @@ npm install date-fns --save
 npx shadcn-ui@latest init
 ```
 
-Componentes usados do shadcn (biblioteca de componentes), cole o comando abaixo todo no Terminal:
+- Componentes usados do shadcn (biblioteca de componentes), cole o comando abaixo todo no Terminal:
 ```bash
 npx shadcn-ui@latest add avatar button calendar card command dialog drawer input label radio-group select textarea
 ```
 
-
-
+- Depois de dar fetch nos arquivos do projeto e instalar todas as dependências, coloque o projeto para rodar com:
+```bash
+npm run dev
+```
