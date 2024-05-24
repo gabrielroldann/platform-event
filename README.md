@@ -24,7 +24,7 @@ git fetch
 
 ## Dependências
 
-Cole os comandos abaixo no terminal (separadamente):
+Cole os comandos abaixo no terminal:
 ```bash
 npm install prisma --save-dev
 ```
