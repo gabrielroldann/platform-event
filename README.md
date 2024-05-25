@@ -17,6 +17,7 @@ npm run dev
 ```bash
 git remote add origin https://github.com/gabrielroldann/platform-event.git
 ```
+- No canto inferior esquerdo mude a branch de "main" para "stage"
 - Carregue os arquivos do projeto para sua pasta do VS Code digitando o comando abaixo no Terminal
 ```bash
 git fetch
