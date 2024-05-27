@@ -13,7 +13,8 @@ npx create-next-app@latest .
 npm run dev
 ```
 - Para ver o projeto funcionando abra [http://localhost:3000](http://localhost:3000) no navegador.
-- Vá no Terminal e digite:
+- Entre na página do [repositório](https://github.com/gabrielroldann/platform-event/) e crie uma nova Branch.
+- Vá no Terminal do VS Code e digite:
 ```bash
 git remote add origin https://github.com/gabrielroldann/platform-event.git
 ```
