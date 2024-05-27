@@ -7,18 +7,19 @@
 ```bash
 npx create-next-app@latest .
 ```
-- Terá umas perguntas no terminal, aperte Enter até as perguntas terminarem.
+- Terá umas perguntas no terminal, aperte Enter até as perguntas terminarem
 - Quando o projeto for criado inicie a primeira vez para gerar a pasta .next:
 ```bash
 npm run dev
 ```
 - Para ver o projeto funcionando abra [http://localhost:3000](http://localhost:3000) no navegador.
-- Entre na página do [repositório](https://github.com/gabrielroldann/platform-event/) e crie uma nova Branch.
+- Entre na página do [repositório](https://github.com/gabrielroldann/platform-event/) e crie uma nova Branch, caso não saiba criar nova Branch [olhe aqui](https://docs.github.com/pt/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-and-deleting-branches-within-your-repository).
+- Quando for criar a nova branch use como "Source" a branch "stage"
 - Vá no Terminal do VS Code e digite:
 ```bash
 git remote add origin https://github.com/gabrielroldann/platform-event.git
 ```
-- No canto inferior esquerdo mude a branch de "main" para "stage"
+- No canto inferior esquerdo mude a branch de "main" para o nome da sua branch criada
 - Carregue os arquivos do projeto para sua pasta do VS Code digitando o comando abaixo no Terminal
 ```bash
 git fetch
