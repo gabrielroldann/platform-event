@@ -22,7 +22,7 @@ const Search = ({ events }: SearchProps) => {
     <div className="flex flex-col gap-2">
       <h1 className="text-xl font-normal">Pesquise um evento</h1>
       <Command className="border">
-        <CommandInput placeholder="Nome do evento" className="w-full" />
+        <CommandInput placeholder="Nome do evento" className="w-full text-base" />
         <CommandList>
           {searchValue === "" ? <div></div> : <div>2</div>}
           {/* <CommandEmpty>Não foram encontrados eventos</CommandEmpty>
