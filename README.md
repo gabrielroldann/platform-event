@@ -1,47 +1,59 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Dependencies
+# Começar um projeto Next.js no VS Code:
 
+## Passo-a-passo
+- Criar pasta e abrir ela no VS Code
+- Abrir o terminal e digitar o comando:
 ```bash
-npm install prisma --save-dev
-npx prisma init --datasource-provider postgresql
-npm install @prisma/client
-npm install next-auth
-npx shadcn-ui@latest init
-npm install date-fns --save
+npx create-next-app@latest .
 ```
-
-## Getting Started
-
-First, run the development server:
-
+- Terá umas perguntas no terminal, aperte Enter até as perguntas terminarem
+- Quando o projeto for criado inicie a primeira vez para gerar a pasta .next:
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+- Para ver o projeto funcionando abra [http://localhost:3000](http://localhost:3000) no navegador.
+- Entre na página do [repositório](https://github.com/gabrielroldann/platform-event/) e crie uma nova Branch, caso não saiba criar nova Branch [olhe aqui](https://docs.github.com/pt/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-and-deleting-branches-within-your-repository).
+- Quando for criar a nova branch use como "Source" a branch "stage"
+- Vá no Terminal do VS Code e digite:
+```bash
+git remote add origin https://github.com/gabrielroldann/platform-event.git
+```
+- No canto inferior esquerdo mude a branch de "main" para o nome da sua branch criada
+- Carregue os arquivos do projeto para sua pasta do VS Code digitando o comando abaixo no Terminal
+```bash
+git fetch
+```
+- Mude para o Source Control no VS Code na barra lateral esquerda, onde terá as alterações do Git, e aperte no botão Sync Changes e 'Ok' no Pop-Up que vai abrir
+
+## Dependências
+
+- Cole os comandos abaixo no terminal:
+```bash
+npm install prisma --save-dev
+```
+```bash
+npx prisma init --datasource-provider postgresql
+```
+```bash
+npm install @prisma/client
+```
+```bash
+npm install next-auth
+```
+```bash
+npm install date-fns --save
+```
+```bash
+npx shadcn-ui@latest init
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Componentes usados do shadcn (biblioteca de componentes), cole o comando abaixo todo no Terminal:
+```bash
+npx shadcn-ui@latest add avatar button calendar card command dialog drawer input label radio-group select textarea
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Depois de dar fetch nos arquivos do projeto e instalar todas as dependências, coloque o projeto para rodar com:
+```bash
+npm run dev
+```
