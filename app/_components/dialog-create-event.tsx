@@ -35,7 +35,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
+  const [location, setLocation] = useState<string>("Presencial");
   const [image, setImage] = useState<string>("");
   const [eventStartDate, setEventStartDate] = useState<Date>(new Date());
   const [eventEndDate, setEventEndDate] = useState<Date>(
@@ -44,7 +44,15 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
   const initiallySelectedDates = [eventStartDate, eventEndDate];
   const [selectedDates, setSelectedDates] = useState(initiallySelectedDates);
 
+  console.log("title: ", title);
+  console.log("description: ", description);
+  console.log("location: ", location);
+  console.log("image: ", image);
+  console.log("selectedDates: ", selectedDates);
+
   const [loading, setLoading] = useState(false);
+
+  const fileReader = new FileReader();
 
   const handleCreateEvent = async () => {
     try {
@@ -59,6 +67,10 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
           duration: 2500,
         });
       }
+
+      // if (selectedDates[0].getTime < selectedDates[1].getTime) {
+      //   selectedDates[1] = selectedDates[0];
+      // }
 
       setLoading(true);
 
@@ -108,6 +120,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
               type="text"
               placeholder="Digite aqui.."
               className="text-base focus:shadow-[#044CF4]"
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -119,18 +132,27 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
               type="file"
               placeholder="Foto do Evento"
               className="text-lg h-40"
+              onChange={(e) => setImage(e.target.value)}
             />
           </div>
           <div className="flex flex-col gap-1">
             <Label htmlFor="description" className="text-base">
               Dê uma descrição para o evento
             </Label>
-            <Textarea id="description" className="text-base resize-none h-24" />
+            <Textarea
+              id="description"
+              className="text-base resize-none h-24"
+              onChange={(e) => setDescription(e.target.value)}
+            />
           </div>
-          <RadioGroup className="flex flex-col gap-1" defaultValue="presencial">
+          <RadioGroup
+            className="flex flex-col gap-1"
+            defaultValue="presencial"
+            onValueChange={setLocation}
+          >
             <div className="flex items-center gap-2">
               <RadioGroupItem
-                value="presencial"
+                value="Presencial"
                 id="presencial"
                 className="border-black text-black"
               />
@@ -140,9 +162,10 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
             </div>
             <div className="flex items-center gap-2">
               <RadioGroupItem
-                value="online"
+                value="Online"
                 id="online"
                 className="border-black text-black"
+                onSelect={() => setLocation("Online")}
               />
               <Label htmlFor="online" className="text-base">
                 Online
