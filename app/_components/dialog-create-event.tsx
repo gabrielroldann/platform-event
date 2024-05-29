@@ -52,8 +52,6 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
 
   const [loading, setLoading] = useState(false);
 
-  const fileReader = new FileReader();
-
   const handleCreateEvent = async () => {
     try {
       if (
