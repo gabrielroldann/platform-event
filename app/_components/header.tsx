@@ -87,8 +87,13 @@ const Header = () => {
                 className="rounded-full cursor-pointer"
               />
               <Button
+<<<<<<< HEAD
                 variant={"link"}
                 className="flex gap-1 items-center text-base text-black font-medium rounded-xl"
+=======
+                variant={"ghost"}
+                className="flex gap-2 items-center text-lg text-black font-medium rounded-xl"
+>>>>>>> baa83078b0b8f3e67d59cda11c4f330c6257d69a
                 onClick={handleLogout}
               >
                 <LogOut size={16} />

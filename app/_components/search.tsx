@@ -26,7 +26,11 @@ const Search = ({ events }: SearchProps) => {
   return (
     <div>
       <Command className="border">
+<<<<<<< HEAD
         <CommandInput placeholder="Digite aqui.." />
+=======
+        <CommandInput placeholder="Nome do evento" className="w-full text-base" />
+>>>>>>> baa83078b0b8f3e67d59cda11c4f330c6257d69a
         <CommandList>
           {searchValue === "" ? (
             <CommandEmpty className="text-muted-foreground">
