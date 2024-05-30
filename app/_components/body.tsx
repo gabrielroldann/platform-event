@@ -1,5 +1,3 @@
-"use server";
-
 import { Event } from "@prisma/client";
 import { db } from "../_lib/prisma";
 import Search from "./search";
