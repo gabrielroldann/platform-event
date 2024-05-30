@@ -202,7 +202,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
               }}
             />
           </div>
-          <DialogFooter className="w-full mt-2 fixed">
+          <DialogFooter className="w-full mt-2">
             <DialogClose asChild className="w-full">
               <Button variant={"outline"} className="w-full">
                 Cancelar
