@@ -36,7 +36,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [location, setLocation] = useState<string>("Presencial");
-  const [image, setImage] = useState<string>("");
+  const [image, setImage] = useState<File>();
   const [eventStartDate, setEventStartDate] = useState<Date>(new Date());
   const [eventEndDate, setEventEndDate] = useState<Date>(
     addDays(new Date(), 7)
@@ -78,7 +78,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         startDate: selectedDates[0],
         endDate: selectedDates[1],
         location: location,
-        image: image,
+        // image: image,
         userId: (data?.user as any).id,
       });
       setLoading(false);
@@ -130,7 +130,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
               type="file"
               placeholder="Foto do Evento"
               className="text-lg h-40"
-              onChange={(e) => setImage(e.target.value)}
+              onChange={(e) => setImage(e.target.files?.[0])}
             />
           </div>
           <div className="flex flex-col gap-1">

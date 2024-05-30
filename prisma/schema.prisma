@@ -49,7 +49,7 @@ model Event {
   startDate   DateTime
   endDate     DateTime?
   location    String
-  image       String
+  image       String?
 
   userId String
 

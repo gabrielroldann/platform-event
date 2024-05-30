@@ -9,6 +9,7 @@ import Body from "../_components/body";
 export default async function Home() {
   const session = await getServerSession(authOptions);
   const events = await db.event.findMany();
+
   console.log(session);
 
   return (

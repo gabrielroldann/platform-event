@@ -9,12 +9,14 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CreateEventDialog from "./dialog-create-event";
 import AuthDialog from "./register-login";
+import ConfirmLogoutDialog from "./confirm-logout";
 
 const Header = () => {
   const { data } = useSession();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
+  const [openLogout, setOpenLogout] = useState(false);
 
   console.log("header: " + data);
 
@@ -27,8 +29,7 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    signOut();
-    router.refresh();
+    setOpenLogout(true);
   };
 
   return (
@@ -95,6 +96,12 @@ const Header = () => {
                 <LogOut size={16} />
                 Sair
               </Button>
+              {openLogout && (
+                <ConfirmLogoutDialog
+                  open={openLogout}
+                  setOpen={setOpenLogout}
+                />
+              )}
             </div>
           ) : (
             <Button

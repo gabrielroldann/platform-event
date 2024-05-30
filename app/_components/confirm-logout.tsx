@@ -1,3 +1,7 @@
+"use client";
+
+import { signOut } from "next-auth/react";
+import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
@@ -6,18 +10,35 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 
-const ConfirmLogoutDialog = () => {
+interface ConfirmLogoutDialogProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+const ConfirmLogoutDialog = ({ open, setOpen }: ConfirmLogoutDialogProps) => {
+  const handleLogout = () => {
+    signOut();
+    setOpen(false);
+  };
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-2xl text-center font-medium">
+          <DialogTitle className="text-2xl font-medium">
             Confirmação
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground text-center">
+          <DialogDescription className="text-muted-foreground">
             Deseja deslogar do site?
           </DialogDescription>
         </DialogHeader>
+        <div className="flex justify-between w-full gap-2">
+          <Button variant={"outline"} className="w-full">
+            Cancelar
+          </Button>
+          <Button variant={"default"} onClick={handleLogout} className="w-full">
+            Sair
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );
