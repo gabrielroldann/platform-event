@@ -17,14 +17,9 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
         <div className="flex gap-3">
           {events.map((event) => (
             <Card key={event.id}>
-              <CardHeader>{event.image}</CardHeader>
-              <CardContent>
-                {/* TODO: se tiver startDate e endDate => printar: ( startDate até endDate ) */}
-                {/* Se não tiver apenas mostrar startDate */}
-                <div>
-                  <p className="font-medium text-xl">{event.title}</p>
-                  <p className="text-muted-foreground">{event.location}</p>
-                </div>
+              <CardContent key={event.id}>
+                <p className="font-medium text-xl">{event.title}</p>
+                <p className="text-muted-foreground">{event.location}</p>
               </CardContent>
             </Card>
           ))}
