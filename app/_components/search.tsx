@@ -37,7 +37,7 @@ const Search = ({ events }: SearchProps) => {
           )}
           <CommandGroup>
             {events.map((event) => (
-              <CommandItem>
+              <CommandItem key={event.id}>
                 <p>{event.title}</p>
                 <p>({event.location})</p>
               </CommandItem>
