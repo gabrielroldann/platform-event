@@ -10,6 +10,11 @@ import {
   CommandList,
 } from "./ui/command";
 import { Event } from "@prisma/client";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Input } from "./ui/input";
+import { SearchIcon } from "lucide-react";
+import { Card, CardContent } from "./ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
 
 interface SearchProps {
   events: Event[];
@@ -19,18 +24,25 @@ const Search = ({ events }: SearchProps) => {
   const [searchValue, setSearchValue] = useState<string>("");
   console.log(searchValue);
   return (
-    <div className="flex flex-col gap-2">
-      <h1 className="text-xl font-normal">Pesquise um evento</h1>
+    <div>
       <Command className="border">
-        <CommandInput placeholder="Nome do evento" className="w-full" />
+        <CommandInput placeholder="Digite aqui.." />
         <CommandList>
-          {searchValue === "" ? <div></div> : <div>2</div>}
-          {/* <CommandEmpty>Não foram encontrados eventos</CommandEmpty>
-          <CommandGroup title="Eventos">
+          {searchValue === "" ? (
+            <CommandEmpty className="text-muted-foreground">
+              Eventos não encontrados
+            </CommandEmpty>
+          ) : (
+            <div></div>
+          )}
+          <CommandGroup>
             {events.map((event) => (
-              <CommandItem key={event.id}>{event.title}</CommandItem>
+              <CommandItem>
+                <p>{event.title}</p>
+                <p>({event.location})</p>
+              </CommandItem>
             ))}
-          </CommandGroup> */}
+          </CommandGroup>
         </CommandList>
       </Command>
     </div>

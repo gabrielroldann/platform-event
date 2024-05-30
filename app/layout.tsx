@@ -22,10 +22,11 @@ export default function RootLayout({
         <AuthProvider>
           {children}
           <Toaster
+            theme="light"
             richColors
             expand={false}
-            visibleToasts={2}
-            position={"bottom-center"}
+            visibleToasts={3}
+            position={"top-center"}
           />
         </AuthProvider>
       </body>

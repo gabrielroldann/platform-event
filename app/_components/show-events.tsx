@@ -1,9 +1,7 @@
 "use client";
 
 import { Event } from "@prisma/client";
-import { useSession } from "next-auth/react";
 import EmptyEvents from "./empty-events";
-import { useState } from "react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 
 interface ShowEventsProps {
@@ -24,7 +22,6 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
                 {/* TODO: se tiver startDate e endDate => printar: ( startDate até endDate ) */}
                 {/* Se não tiver apenas mostrar startDate */}
                 <div>
-                  <p className="font-normal text-base">Data Início</p>
                   <p className="font-medium text-xl">{event.title}</p>
                   <p className="text-muted-foreground">{event.location}</p>
                 </div>
