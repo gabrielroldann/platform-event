@@ -27,7 +27,7 @@ const ConfirmLogoutDialog = ({ open, setOpen }: ConfirmLogoutDialogProps) => {
           <DialogTitle className="text-2xl font-medium">
             Confirmação
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
+          <DialogDescription className="text-base text-black">
             Deseja deslogar do site?
           </DialogDescription>
         </DialogHeader>

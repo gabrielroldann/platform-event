@@ -103,7 +103,9 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="w-8/12 max-h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Publicar Evento</DialogTitle>
+          <DialogTitle className="text-2xl font-medium">
+            Publicar Evento
+          </DialogTitle>
           <DialogDescription className="text-muted-foreground">
             Adicione informações para criar o evento
           </DialogDescription>
@@ -145,7 +147,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
           </div>
           <RadioGroup
             className="flex flex-col gap-1"
-            defaultValue="presencial"
+            defaultValue="Presencial"
             onValueChange={setLocation}
           >
             <div className="flex items-center gap-2">
