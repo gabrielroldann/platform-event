@@ -8,6 +8,7 @@ import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CreateEventDialog from "./dialog-create-event";
+import AuthDialog from "./register-login";
 
 const Header = () => {
   const { data } = useSession();
@@ -18,15 +19,11 @@ const Header = () => {
   console.log("header: " + data);
 
   const handlePublicarEvento = () => {
-    if (!data) {
-      signIn("google");
-    } else {
-      setOpen(true);
-    }
+    setOpen(true);
   };
 
   const handleLogin = () => {
-    signIn("google");
+    setOpen(true);
   };
 
   const handleLogout = () => {
@@ -73,7 +70,11 @@ const Header = () => {
           >
             Publicar Evento
           </Button>
-          <CreateEventDialog open={open} setOpen={setOpen} />
+          {data && open === true ? (
+            <CreateEventDialog open={open} setOpen={setOpen} />
+          ) : (
+            <AuthDialog open={open} setOpen={setOpen} />
+          )}
           {data ? (
             <div className="flex gap-2 items-center">
               {/* <Avatar>
@@ -87,13 +88,8 @@ const Header = () => {
                 className="rounded-full cursor-pointer"
               />
               <Button
-<<<<<<< HEAD
                 variant={"link"}
                 className="flex gap-1 items-center text-base text-black font-medium rounded-xl"
-=======
-                variant={"ghost"}
-                className="flex gap-2 items-center text-lg text-black font-medium rounded-xl"
->>>>>>> baa83078b0b8f3e67d59cda11c4f330c6257d69a
                 onClick={handleLogout}
               >
                 <LogOut size={16} />
