@@ -16,7 +16,7 @@ const ShowEvents = ({ events }: ShowEventsProps) => {
       {listEvents > 0 ? (
         <div className="flex gap-3">
           {events.map((event) => (
-            <Card>
+            <Card key={event.id}>
               <CardHeader>{event.image}</CardHeader>
               <CardContent>
                 {/* TODO: se tiver startDate e endDate => printar: ( startDate até endDate ) */}
