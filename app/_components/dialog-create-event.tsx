@@ -15,7 +15,7 @@ import { Textarea } from "./ui/textarea";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Calendar } from "./ui/calendar";
 import { useState } from "react";
-import { addDays } from "date-fns";
+import { addDays, set } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Button } from "./ui/button";
 import { useSession } from "next-auth/react";
@@ -36,7 +36,8 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [location, setLocation] = useState<string>("Presencial");
-  const [image, setImage] = useState<File>();
+  const [image, setImage] = useState<File | undefined>(undefined);
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
   const [eventStartDate, setEventStartDate] = useState<Date>(new Date());
   const [eventEndDate, setEventEndDate] = useState<Date>(
     addDays(new Date(), 7)
@@ -47,10 +48,27 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
   console.log("title: ", title);
   console.log("description: ", description);
   console.log("location: ", location);
-  console.log("image: ", image);
   console.log("selectedDates: ", selectedDates);
 
   const [loading, setLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setImage(file);
+
+    if (imageUrl) {
+      URL.revokeObjectURL(imageUrl);
+    }
+
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setImageUrl(url);
+    } else {
+      setImageUrl(undefined);
+    }
+  };
+  console.log("imageUrl: ", imageUrl);
+  console.log("image: ", image);
 
   const handleCreateEvent = async () => {
     try {
@@ -58,7 +76,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         !title ||
         !description ||
         !location ||
-        !image ||
+        !imageUrl ||
         selectedDates.length === 0
       ) {
         return toast.info("Preencha todos os campos para criar o evento!", {
@@ -78,7 +96,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         startDate: selectedDates[0],
         endDate: selectedDates[1],
         location: location,
-        // image: image,
+        image: imageUrl,
         userId: (data?.user as any).id,
       });
       setLoading(false);
@@ -103,7 +121,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="w-8/12 max-h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-medium">
+          <DialogTitle className="text-3xl font-normal">
             Publicar Evento
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
@@ -112,7 +130,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         </DialogHeader>
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <Label htmlFor="title" className="text-base">
+            <Label htmlFor="title" className="text-base font-normal">
               Título do Evento
             </Label>
             <Input
@@ -124,7 +142,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <Label htmlFor="image" className="text-base">
+            <Label htmlFor="image" className="text-base font-normal">
               Adicione uma Imagem para ser capa do Evento
             </Label>
             <Input
@@ -132,11 +150,11 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
               type="file"
               placeholder="Foto do Evento"
               className="text-lg h-40"
-              onChange={(e) => setImage(e.target.files?.[0])}
+              onChange={handleChange}
             />
           </div>
           <div className="flex flex-col gap-1">
-            <Label htmlFor="description" className="text-base">
+            <Label htmlFor="description" className="text-base font-normal">
               Dê uma descrição para o evento
             </Label>
             <Textarea
@@ -156,7 +174,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
                 id="presencial"
                 className="border-black text-black"
               />
-              <Label htmlFor="presencial" className="text-base">
+              <Label htmlFor="presencial" className="text-base font-normal">
                 Presencial
               </Label>
             </div>
@@ -167,17 +185,16 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
                 className="border-black text-black"
                 onSelect={() => setLocation("Online")}
               />
-              <Label htmlFor="online" className="text-base">
+              <Label htmlFor="online" className="text-base font-normal">
                 Online
               </Label>
             </div>
           </RadioGroup>
           <div className="flex flex-col gap-2 mt-1">
-            <Label htmlFor="calendar" className="text-base">
+            <h1 className="text-base font-normal">
               Selecione a data inicial e a data final (se tiver).
-            </Label>
+            </h1>
             <Calendar
-              id="calendar"
               mode="multiple"
               className="w-full p-0"
               locale={ptBR}

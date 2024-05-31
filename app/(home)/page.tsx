@@ -12,6 +12,12 @@ export default async function Home() {
 
   console.log(session);
 
+  // TODO: separar dialog de registro e dialog de login
+  // TODO: criar evento com imagem e ver se funciona no card
+  // TODO: criar card e página de evento
+  // TODO: criar pagina de todos os eventos / pagina de buscar de eventos
+  // TODO: autenticar usuário com credentials
+
   return (
     <div>
       <div className="p-5 px-8 m-0">
