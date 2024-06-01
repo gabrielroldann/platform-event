@@ -1,50 +1,52 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "./ui/command";
 import { Event } from "@prisma/client";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Button } from "./ui/button";
+import { toast } from "sonner";
 import { SearchIcon } from "lucide-react";
-import { Card, CardContent } from "./ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
 
 interface SearchProps {
-  events: Event[];
+  allEvents: Event[];
 }
 
-const Search = ({ events }: SearchProps) => {
+const Search = ({ allEvents }: SearchProps) => {
   const [searchValue, setSearchValue] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleSearch = () => {
+    if (searchValue === "")
+      return toast.info("Digite o nome de algum evento para pesquisar", {
+        duration: 2000,
+      });
+  };
+
   console.log(searchValue);
   return (
     <div>
-      <Command className="border">
-        <CommandInput placeholder="Digite aqui.." />
-        <CommandList>
-          {searchValue === "" ? (
-            <CommandEmpty className="text-muted-foreground">
-              Eventos não encontrados
-            </CommandEmpty>
-          ) : (
-            <div></div>
-          )}
-          <CommandGroup>
-            {events.map((event) => (
-              <CommandItem key={event.id} className="flex gap-1">
-                <p>{event.title}</p>
-                <p>({event.location})</p>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </CommandList>
-      </Command>
+      <div className="flex flex-col gap-1">
+        <Label htmlFor="search" className="font-normal text-lg">
+          Pesquisa rápida de um evento, digite o nome do evento abaixo:
+        </Label>
+        <div className="flex gap-1">
+          <Input
+            id="search"
+            placeholder="Exemplo: Céus Noturnos"
+            className="text-base py-4"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+          <Button
+            variant={"default"}
+            onClick={handleSearch}
+            className="bg-[#044CF4] p-3 font-normal text-base"
+          >
+            Buscar
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

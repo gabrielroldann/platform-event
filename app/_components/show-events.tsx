@@ -1,18 +1,15 @@
 "use server";
 
-import { Event } from "@prisma/client";
 import { db } from "../_lib/prisma";
 import EventCard from "./card-event-body";
-import { ScrollArea } from "./ui/scroll-area";
 
 interface ShowEventsProps {
-  events: Event[];
+  eventType?: string;
 }
 
-const ShowEvents = async ({ events }: ShowEventsProps) => {
-  const listEvents = events.length;
-
+const ShowEvents = async ({ eventType }: ShowEventsProps) => {
   const eventos = await db.event.findMany({
+    take: 8,
     include: {
       Image: {
         select: {
@@ -20,7 +17,9 @@ const ShowEvents = async ({ events }: ShowEventsProps) => {
         },
       },
     },
+    where: eventType ? { location: eventType } : {},
   });
+  const listEvents = eventos.length;
 
   return (
     <div>
@@ -29,6 +28,7 @@ const ShowEvents = async ({ events }: ShowEventsProps) => {
           {eventos.map((event) => (
             <EventCard
               key={event.id}
+              id={event.id}
               title={event.title}
               location={event.location}
               startDate={event.startDate}

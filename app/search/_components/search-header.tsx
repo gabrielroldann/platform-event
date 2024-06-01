@@ -2,21 +2,23 @@
 
 import Image from "next/image";
 import uniforlogo from "../../public/uniforlogo.svg";
-import { Button } from "./ui/button";
+import { Button } from "@/app/_components/ui/button";
 import { useSession } from "next-auth/react";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import CreateEventDialog from "./dialog-create-event";
-import AuthDialog from "./register-login";
-import ConfirmLogoutDialog from "./confirm-logout";
+import CreateEventDialog from "@/app/_components/dialog-create-event";
+import AuthDialog from "@/app/_components/register-login";
+import ConfirmLogoutDialog from "@/app/_components/confirm-logout";
 
-const Header = () => {
+const SearchHeader = () => {
   const { data } = useSession();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const [openLogout, setOpenLogout] = useState(false);
+
+  console.log("header: " + data);
 
   const handlePublicarEvento = () => {
     setOpen(true);
@@ -45,13 +47,19 @@ const Header = () => {
               variant={"ghost"}
               className="text-base font-medium rounded-xl"
             >
-              Precisa de Ajuda?
+              Encontrar Evento
             </Button>
             <Button
               variant={"ghost"}
               className="text-base underline text-[#044CF4] hover:text-[#044CF4] hover:no-underline font-medium rounded-xl"
             >
               Todos os Eventos Disponíveis
+            </Button>
+            <Button
+              variant={"ghost"}
+              className="text-base font-medium rounded-xl"
+            >
+              Precisa de Ajuda?
             </Button>
           </div>
         </div>
@@ -110,4 +118,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default SearchHeader;
