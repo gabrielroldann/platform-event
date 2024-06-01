@@ -37,7 +37,7 @@ const Search = ({ events }: SearchProps) => {
           )}
           <CommandGroup>
             {events.map((event) => (
-              <CommandItem key={event.id}>
+              <CommandItem key={event.id} className="flex gap-1">
                 <p>{event.title}</p>
                 <p>({event.location})</p>
               </CommandItem>

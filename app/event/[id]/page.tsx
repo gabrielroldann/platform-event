@@ -3,6 +3,7 @@
 import { authOptions } from "@/app/_lib/auth";
 import { db } from "@/app/_lib/prisma";
 import { getServerSession } from "next-auth";
+import Image from "next/image";
 
 interface EventPageParams {
   params: {
@@ -26,7 +27,9 @@ const EventPage = async ({ params }: EventPageParams) => {
   return (
     <div>
       {currentEvent ? (
-        <div>{currentEvent.id}</div>
+        <div>
+          <div>{currentEvent.id}</div>
+        </div>
       ) : (
         <div>Essa página nao existe</div>
       )}

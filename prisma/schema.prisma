@@ -49,13 +49,21 @@ model Event {
   startDate   DateTime
   endDate     DateTime?
   location    String
-  image       String?
 
-  userId String
+  userId  String
+  imageId String
 
+  Image        Image          @relation(fields: [imageId], references: [id], onDelete: Cascade)
   User         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   Subscription Subscription[]
   Diary        Diary[]
+}
+
+model Image {
+  id  String @id @default(cuid())
+  url String
+
+  Event Event[]
 }
 
 model AcademicWork {

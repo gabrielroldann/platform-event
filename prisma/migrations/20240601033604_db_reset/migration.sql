@@ -5,8 +5,17 @@ CREATE TABLE "users" (
     "email" TEXT,
     "email_verified" TIMESTAMP(3),
     "image" TEXT,
+    "typeUserId" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "TypeUser" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+
+    CONSTRAINT "TypeUser_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -15,9 +24,9 @@ CREATE TABLE "Event" (
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
-    "endDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3),
     "location" TEXT NOT NULL,
-    "maxParticipants" INTEGER,
+    "image" TEXT,
     "userId" TEXT NOT NULL,
 
     CONSTRAINT "Event_pkey" PRIMARY KEY ("id")
@@ -27,9 +36,9 @@ CREATE TABLE "Event" (
 CREATE TABLE "AcademicWork" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
+    "description" TEXT,
+    "image" TEXT,
     "userId" TEXT NOT NULL,
-    "eventId" TEXT NOT NULL,
 
     CONSTRAINT "AcademicWork_pkey" PRIMARY KEY ("id")
 );
@@ -61,6 +70,7 @@ CREATE TABLE "Diary" (
     "hours" TEXT,
     "description" TEXT NOT NULL,
     "eventId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
 
     CONSTRAINT "Diary_pkey" PRIMARY KEY ("id")
 );
@@ -124,13 +134,13 @@ CREATE UNIQUE INDEX "sessions_session_token_key" ON "sessions"("session_token");
 CREATE UNIQUE INDEX "verificationtokens_identifier_token_key" ON "verificationtokens"("identifier", "token");
 
 -- AddForeignKey
+ALTER TABLE "users" ADD CONSTRAINT "users_typeUserId_fkey" FOREIGN KEY ("typeUserId") REFERENCES "TypeUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Event" ADD CONSTRAINT "Event_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "AcademicWork" ADD CONSTRAINT "AcademicWork_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "AcademicWork" ADD CONSTRAINT "AcademicWork_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Rating" ADD CONSTRAINT "Rating_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -143,6 +153,9 @@ ALTER TABLE "Subscription" ADD CONSTRAINT "Subscription_userId_fkey" FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE "Subscription" ADD CONSTRAINT "Subscription_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Diary" ADD CONSTRAINT "Diary_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Diary" ADD CONSTRAINT "Diary_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE CASCADE ON UPDATE CASCADE;

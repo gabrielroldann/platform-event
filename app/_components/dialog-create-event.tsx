@@ -15,7 +15,7 @@ import { Textarea } from "./ui/textarea";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Calendar } from "./ui/calendar";
 import { useState } from "react";
-import { addDays } from "date-fns";
+import { addDays, set } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Button } from "./ui/button";
 import { useSession } from "next-auth/react";
@@ -23,6 +23,7 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import { SaveEvent } from "../_actions/save-event";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { getSignedURL } from "../_actions/get-signed-url";
 
 interface CreateEventDialogProps {
   open: boolean;
@@ -36,7 +37,6 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [location, setLocation] = useState<string>("Presencial");
-  const [image, setImage] = useState<File>();
   const [eventStartDate, setEventStartDate] = useState<Date>(new Date());
   const [eventEndDate, setEventEndDate] = useState<Date>(
     addDays(new Date(), 7)
@@ -47,10 +47,88 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
   console.log("title: ", title);
   console.log("description: ", description);
   console.log("location: ", location);
-  console.log("image: ", image);
   console.log("selectedDates: ", selectedDates);
 
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState<File | undefined>(undefined);
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
+  const [imageIdResponse, setImageIdResponse] = useState<string | undefined>(
+    undefined
+  );
+
+  console.log("imageIdResponse: ", imageIdResponse);
+
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setImage(file);
+
+    if (imageUrl) {
+      URL.revokeObjectURL(imageUrl);
+    }
+
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setImageUrl(url);
+    } else {
+      setImageUrl(undefined);
+    }
+  };
+
+  const computeSHA256 = async (file: File) => {
+    const buffer = await file.arrayBuffer();
+    const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
+    return hashHex;
+  };
+
+  // const handleTest = async () => {
+  //   try {
+  //     if (image) {
+  //       const checksum = await computeSHA256(image);
+  //       const signedUrlResult = await getSignedURL(
+  //         image.type,
+  //         image.size,
+  //         checksum
+  //       );
+
+  //       if (signedUrlResult.error !== undefined) {
+  //         return toast.error(
+  //           "Ocorreu um erro ao criar evento, tente novamente!",
+  //           {
+  //             description:
+  //               "Se o erro persistir entre em contato com o suporte.",
+  //             duration: 2500,
+  //           }
+  //         );
+  //       }
+
+  //       const { url, newImageId } = await signedUrlResult.success;
+  //       setImageIdResponse(newImageId);
+  //       console.log("url:", { url });
+
+  //       await fetch(url, {
+  //         method: "PUT",
+  //         body: image,
+  //         headers: {
+  //           "Content-Type": image.type,
+  //         },
+  //       });
+
+  //       return toast.success("Imagem enviada com sucesso!", {
+  //         duration: 2500,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("Ocorreu um erro ao criar evento, tente novamente!", {
+  //       description: "Se o erro persistir entre em contato com o suporte.",
+  //       duration: 2500,
+  //     });
+  //   }
+  // };
 
   const handleCreateEvent = async () => {
     try {
@@ -66,11 +144,37 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         });
       }
 
+      setLoading(true);
+
       // if (selectedDates[0].getTime < selectedDates[1].getTime) {
       //   selectedDates[1] = selectedDates[0];
       // }
 
-      setLoading(true);
+      const checksum = await computeSHA256(image);
+      const signedUrlResult = await getSignedURL(
+        image.type,
+        image.size,
+        checksum
+      );
+
+      if (signedUrlResult.error !== undefined) {
+        return toast.error(
+          "Ocorreu um erro ao criar evento, tente novamente!",
+          {
+            duration: 2500,
+          }
+        );
+      }
+
+      const { url, newImageId } = signedUrlResult.success;
+
+      await fetch(url, {
+        method: "PUT",
+        body: image,
+        headers: {
+          "Content-Type": image.type,
+        },
+      });
 
       const newEvent = await SaveEvent({
         title: title,
@@ -78,16 +182,18 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         startDate: selectedDates[0],
         endDate: selectedDates[1],
         location: location,
-        // image: image,
+        imageId: newImageId,
         userId: (data?.user as any).id,
       });
-      setLoading(false);
 
       toast.success("Evento criado com sucesso!", {
         duration: 2500,
       });
 
-      router.push(`/event/${newEvent.id}`);
+      setOpen(false);
+      router.refresh();
+
+      // router.push(`/event/${newEvent.id}`);
     } catch (error) {
       console.log(error);
       toast.error("Ocorreu um erro ao criar evento, tente novamente!", {
@@ -103,7 +209,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="w-8/12 max-h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-medium">
+          <DialogTitle className="text-3xl font-normal">
             Publicar Evento
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
@@ -112,7 +218,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         </DialogHeader>
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <Label htmlFor="title" className="text-base">
+            <Label htmlFor="title" className="text-base font-normal">
               Título do Evento
             </Label>
             <Input
@@ -124,7 +230,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <Label htmlFor="image" className="text-base">
+            <Label htmlFor="image" className="text-base font-normal">
               Adicione uma Imagem para ser capa do Evento
             </Label>
             <Input
@@ -132,11 +238,11 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
               type="file"
               placeholder="Foto do Evento"
               className="text-lg h-40"
-              onChange={(e) => setImage(e.target.files?.[0])}
+              onChange={handleChange}
             />
           </div>
           <div className="flex flex-col gap-1">
-            <Label htmlFor="description" className="text-base">
+            <Label htmlFor="description" className="text-base font-normal">
               Dê uma descrição para o evento
             </Label>
             <Textarea
@@ -156,7 +262,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
                 id="presencial"
                 className="border-black text-black"
               />
-              <Label htmlFor="presencial" className="text-base">
+              <Label htmlFor="presencial" className="text-base font-normal">
                 Presencial
               </Label>
             </div>
@@ -167,17 +273,16 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
                 className="border-black text-black"
                 onSelect={() => setLocation("Online")}
               />
-              <Label htmlFor="online" className="text-base">
+              <Label htmlFor="online" className="text-base font-normal">
                 Online
               </Label>
             </div>
           </RadioGroup>
           <div className="flex flex-col gap-2 mt-1">
-            <Label htmlFor="calendar" className="text-base">
+            <h1 className="text-base font-normal">
               Selecione a data inicial e a data final (se tiver).
-            </Label>
+            </h1>
             <Calendar
-              id="calendar"
               mode="multiple"
               className="w-full p-0"
               locale={ptBR}
@@ -212,10 +317,17 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
             </DialogClose>
             <Button
               variant={"default"}
-              className="w-full bg-[#044CF4] flex gap-1"
+              className="w-full bg-[#044CF4] flex gap-2"
               onClick={handleCreateEvent}
+              disabled={loading}
             >
-              {loading && <ReloadIcon className="w-5 h-5 animate-spin" />}
+              {loading && (
+                <ReloadIcon
+                  width={20}
+                  height={20}
+                  className="w-5 h-5 animate-spin"
+                />
+              )}
               Criar Evento
             </Button>
           </DialogFooter>
