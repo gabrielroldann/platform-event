@@ -44,19 +44,12 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
   const initiallySelectedDates = [eventStartDate, eventEndDate];
   const [selectedDates, setSelectedDates] = useState(initiallySelectedDates);
 
-  console.log("title: ", title);
-  console.log("description: ", description);
-  console.log("location: ", location);
-  console.log("selectedDates: ", selectedDates);
-
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState<File | undefined>(undefined);
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
   const [imageIdResponse, setImageIdResponse] = useState<string | undefined>(
     undefined
   );
-
-  console.log("imageIdResponse: ", imageIdResponse);
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -83,52 +76,6 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
       .join("");
     return hashHex;
   };
-
-  // const handleTest = async () => {
-  //   try {
-  //     if (image) {
-  //       const checksum = await computeSHA256(image);
-  //       const signedUrlResult = await getSignedURL(
-  //         image.type,
-  //         image.size,
-  //         checksum
-  //       );
-
-  //       if (signedUrlResult.error !== undefined) {
-  //         return toast.error(
-  //           "Ocorreu um erro ao criar evento, tente novamente!",
-  //           {
-  //             description:
-  //               "Se o erro persistir entre em contato com o suporte.",
-  //             duration: 2500,
-  //           }
-  //         );
-  //       }
-
-  //       const { url, newImageId } = await signedUrlResult.success;
-  //       setImageIdResponse(newImageId);
-  //       console.log("url:", { url });
-
-  //       await fetch(url, {
-  //         method: "PUT",
-  //         body: image,
-  //         headers: {
-  //           "Content-Type": image.type,
-  //         },
-  //       });
-
-  //       return toast.success("Imagem enviada com sucesso!", {
-  //         duration: 2500,
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error("Ocorreu um erro ao criar evento, tente novamente!", {
-  //       description: "Se o erro persistir entre em contato com o suporte.",
-  //       duration: 2500,
-  //     });
-  //   }
-  // };
 
   const handleCreateEvent = async () => {
     try {
@@ -323,8 +270,8 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
             >
               {loading && (
                 <ReloadIcon
-                  width={20}
-                  height={20}
+                  width={18}
+                  height={18}
                   className="w-5 h-5 animate-spin"
                 />
               )}

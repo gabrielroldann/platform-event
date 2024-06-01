@@ -6,26 +6,47 @@ import ShowEvents from "./show-events";
 import { Button } from "./ui/button";
 
 const Body = async () => {
-  const eventos = await db.event.findMany({
+  const allEvents = await db.event.findMany({
     include: {
       Image: true,
     },
   });
+
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 mt-2">
       <div className="w-full">
-        <Search events={eventos} />
+        <Search allEvents={allEvents} />
       </div>
       <div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 mt-6">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-medium">Destaques</h1>
             <Button variant={"link"} className="text-base">
               Ver todos
             </Button>
           </div>
-          <div className="mt-8">
-            <ShowEvents events={eventos} />
+          <div className="mt-2">
+            <ShowEvents />
+          </div>
+        </div>
+      </div>
+      <div>
+        <div className="flex flex-col gap-2 mt-6">
+          <h1 className="text-2xl font-medium">
+            Destaques de eventos no formato Online
+          </h1>
+          <div className="mt-2">
+            <ShowEvents eventType="Online" />
+          </div>
+        </div>
+      </div>
+      <div>
+        <div className="flex flex-col gap-2 mt-6">
+          <h1 className="text-2xl font-medium">
+            Destaques de eventos no formato Presencial
+          </h1>
+          <div className="mt-2">
+            <ShowEvents eventType="Presencial" />
           </div>
         </div>
       </div>

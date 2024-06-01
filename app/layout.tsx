@@ -4,7 +4,7 @@ import "./globals.css";
 import AuthProvider from "./_providers/auth";
 import { Toaster } from "sonner";
 
-const fredoka = Fredoka({ subsets: ["latin"] });
+const font = Fredoka({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Plataforma de Eventos",
@@ -17,11 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className={`${fredoka.className}`}>
+      <body className={`${font.className} scrollbar-webkit scrollbar-thumb`}>
         <AuthProvider>
           {children}
           <Toaster
-            theme="light"
+            theme="dark"
             richColors
             expand={false}
             visibleToasts={3}

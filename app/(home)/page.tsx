@@ -23,7 +23,7 @@ export default async function Home() {
         <Header />
       </div>
       <div className="mt-8 w-full flex items-center justify-center">
-        <div className="w-7/12">
+        <div className="w-8/12">
           <Body />
         </div>
       </div>
