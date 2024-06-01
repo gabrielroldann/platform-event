@@ -23,6 +23,7 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import { SaveEvent } from "../_actions/save-event";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { getSignedURL } from "../_actions/get-signed-url";
 
 interface CreateEventDialogProps {
   open: boolean;
@@ -36,8 +37,6 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [location, setLocation] = useState<string>("Presencial");
-  const [image, setImage] = useState<File | undefined>(undefined);
-  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
   const [eventStartDate, setEventStartDate] = useState<Date>(new Date());
   const [eventEndDate, setEventEndDate] = useState<Date>(
     addDays(new Date(), 7)
@@ -51,8 +50,15 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
   console.log("selectedDates: ", selectedDates);
 
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState<File | undefined>(undefined);
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
+  const [imageIdResponse, setImageIdResponse] = useState<string | undefined>(
+    undefined
+  );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  console.log("imageIdResponse: ", imageIdResponse);
+
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     setImage(file);
 
@@ -67,8 +73,62 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
       setImageUrl(undefined);
     }
   };
-  console.log("imageUrl: ", imageUrl);
-  console.log("image: ", image);
+
+  const computeSHA256 = async (file: File) => {
+    const buffer = await file.arrayBuffer();
+    const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
+    return hashHex;
+  };
+
+  // const handleTest = async () => {
+  //   try {
+  //     if (image) {
+  //       const checksum = await computeSHA256(image);
+  //       const signedUrlResult = await getSignedURL(
+  //         image.type,
+  //         image.size,
+  //         checksum
+  //       );
+
+  //       if (signedUrlResult.error !== undefined) {
+  //         return toast.error(
+  //           "Ocorreu um erro ao criar evento, tente novamente!",
+  //           {
+  //             description:
+  //               "Se o erro persistir entre em contato com o suporte.",
+  //             duration: 2500,
+  //           }
+  //         );
+  //       }
+
+  //       const { url, newImageId } = await signedUrlResult.success;
+  //       setImageIdResponse(newImageId);
+  //       console.log("url:", { url });
+
+  //       await fetch(url, {
+  //         method: "PUT",
+  //         body: image,
+  //         headers: {
+  //           "Content-Type": image.type,
+  //         },
+  //       });
+
+  //       return toast.success("Imagem enviada com sucesso!", {
+  //         duration: 2500,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("Ocorreu um erro ao criar evento, tente novamente!", {
+  //       description: "Se o erro persistir entre em contato com o suporte.",
+  //       duration: 2500,
+  //     });
+  //   }
+  // };
 
   const handleCreateEvent = async () => {
     try {
@@ -76,7 +136,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         !title ||
         !description ||
         !location ||
-        !imageUrl ||
+        !image ||
         selectedDates.length === 0
       ) {
         return toast.info("Preencha todos os campos para criar o evento!", {
@@ -84,11 +144,37 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         });
       }
 
+      setLoading(true);
+
       // if (selectedDates[0].getTime < selectedDates[1].getTime) {
       //   selectedDates[1] = selectedDates[0];
       // }
 
-      setLoading(true);
+      const checksum = await computeSHA256(image);
+      const signedUrlResult = await getSignedURL(
+        image.type,
+        image.size,
+        checksum
+      );
+
+      if (signedUrlResult.error !== undefined) {
+        return toast.error(
+          "Ocorreu um erro ao criar evento, tente novamente!",
+          {
+            duration: 2500,
+          }
+        );
+      }
+
+      const { url, newImageId } = signedUrlResult.success;
+
+      await fetch(url, {
+        method: "PUT",
+        body: image,
+        headers: {
+          "Content-Type": image.type,
+        },
+      });
 
       const newEvent = await SaveEvent({
         title: title,
@@ -96,16 +182,18 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         startDate: selectedDates[0],
         endDate: selectedDates[1],
         location: location,
-        image: imageUrl,
+        imageId: newImageId,
         userId: (data?.user as any).id,
       });
-      setLoading(false);
 
       toast.success("Evento criado com sucesso!", {
         duration: 2500,
       });
 
-      router.push(`/event/${newEvent.id}`);
+      setOpen(false);
+      router.refresh();
+
+      // router.push(`/event/${newEvent.id}`);
     } catch (error) {
       console.log(error);
       toast.error("Ocorreu um erro ao criar evento, tente novamente!", {
@@ -229,10 +317,17 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
             </DialogClose>
             <Button
               variant={"default"}
-              className="w-full bg-[#044CF4] flex gap-1"
+              className="w-full bg-[#044CF4] flex gap-2"
               onClick={handleCreateEvent}
+              disabled={loading}
             >
-              {loading && <ReloadIcon className="w-5 h-5 animate-spin" />}
+              {loading && (
+                <ReloadIcon
+                  width={20}
+                  height={20}
+                  className="w-5 h-5 animate-spin"
+                />
+              )}
               Criar Evento
             </Button>
           </DialogFooter>

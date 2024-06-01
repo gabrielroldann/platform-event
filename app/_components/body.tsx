@@ -1,18 +1,20 @@
-import { Event } from "@prisma/client";
+"use server";
+
 import { db } from "../_lib/prisma";
 import Search from "./search";
 import ShowEvents from "./show-events";
 import { Button } from "./ui/button";
 
-interface BodyProps {
-  events: Event[];
-}
-
-const Body = async ({ events }: BodyProps) => {
+const Body = async () => {
+  const eventos = await db.event.findMany({
+    include: {
+      Image: true,
+    },
+  });
   return (
     <div className="flex flex-col gap-8">
       <div className="w-full">
-        <Search events={events} />
+        <Search events={eventos} />
       </div>
       <div>
         <div className="flex flex-col gap-2">
@@ -23,7 +25,7 @@ const Body = async ({ events }: BodyProps) => {
             </Button>
           </div>
           <div className="mt-8">
-            <ShowEvents events={events} />
+            <ShowEvents events={eventos} />
           </div>
         </div>
       </div>

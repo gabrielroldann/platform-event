@@ -13,6 +13,7 @@ import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import Image from "next/image";
 import iconGoogle from "../../public/iconGoogle.svg";
+import iconGoogle2 from "../../public/iconGoogle2.svg";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
@@ -140,10 +141,10 @@ const AuthDialog = ({ open, setOpen }: AuthDialogProps) => {
           {/* GOOGLE BUTTON */}
           <Button
             variant={"outline"}
-            className="w-full flex gap-2 text-base font-normal"
+            className="w-full flex gap-2 text-base font-normal shadow-sm hover:shadow-md transition-all duration-200"
             onClick={handleGoogleLogin}
           >
-            <Image src={iconGoogle} alt="google.svg" width={34} height={34} />
+            <Image src={iconGoogle2} alt="google.svg" width={30} height={30} />
             Continuar com Google
           </Button>
         </div>

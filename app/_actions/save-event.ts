@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "../_lib/prisma";
 
 interface EventParams {
@@ -6,7 +8,7 @@ interface EventParams {
   startDate: Date;
   endDate: Date;
   location: string;
-  image: string;
+  imageId: string;
   userId: string;
 }
 
@@ -18,7 +20,7 @@ export const SaveEvent = async (params: EventParams) => {
       startDate: params.startDate,
       endDate: params.endDate,
       location: params.location,
-      image: params.image,
+      imageId: params.imageId,
       userId: params.userId,
     },
   });
