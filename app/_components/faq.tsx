@@ -7,7 +7,7 @@ import {
 
 const FAQ = () => {
   return (
-    <Accordion type="single" className="w-full">
+    <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="pergunta1">
         <AccordionTrigger>
           1. Como posso criar um evento na plataforma?
