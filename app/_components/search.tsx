@@ -6,15 +6,13 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
-import { SearchIcon } from "lucide-react";
 
 interface SearchProps {
   allEvents: Event[];
 }
 
-const Search = ({ allEvents }: SearchProps) => {
+const Search = () => {
   const [searchValue, setSearchValue] = useState<string>("");
-  const [open, setOpen] = useState<boolean>(false);
 
   const handleSearch = () => {
     if (searchValue === "")
@@ -23,7 +21,6 @@ const Search = ({ allEvents }: SearchProps) => {
       });
   };
 
-  console.log(searchValue);
   return (
     <div>
       <div className="flex flex-col gap-1">

@@ -13,9 +13,8 @@ import {
 } from "./ui/dialog";
 import { Textarea } from "./ui/textarea";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
-import { Calendar } from "./ui/calendar";
 import { useState } from "react";
-import { addDays, set } from "date-fns";
+import { addDays, format, set } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Button } from "./ui/button";
 import { useSession } from "next-auth/react";
@@ -24,6 +23,10 @@ import { SaveEvent } from "../_actions/save-event";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { getSignedURL } from "../_actions/get-signed-url";
+import { DateRange } from "react-day-picker";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { CalendarIcon, Loader } from "lucide-react";
+import { Calendar } from "./ui/calendar";
 
 interface CreateEventDialogProps {
   open: boolean;
@@ -34,6 +37,8 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
   const { data } = useSession();
   const router = useRouter();
 
+  const [popOpen, setPopOpen] = useState(false);
+
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [location, setLocation] = useState<string>("Presencial");
@@ -41,15 +46,21 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
   const [eventEndDate, setEventEndDate] = useState<Date>(
     addDays(new Date(), 7)
   );
+
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 7),
+  });
+
+  const { from, to } = date ?? {};
+  console.log(from as Date, to as Date);
+
   const initiallySelectedDates = [eventStartDate, eventEndDate];
   const [selectedDates, setSelectedDates] = useState(initiallySelectedDates);
 
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState<File | undefined>(undefined);
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
-  const [imageIdResponse, setImageIdResponse] = useState<string | undefined>(
-    undefined
-  );
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -91,6 +102,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         });
       }
 
+      setPopOpen(false);
       setLoading(true);
 
       // if (selectedDates[0].getTime < selectedDates[1].getTime) {
@@ -126,15 +138,11 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
       const newEvent = await SaveEvent({
         title: title,
         description: description,
-        startDate: selectedDates[0],
-        endDate: selectedDates[1],
+        startDate: from as Date,
+        endDate: to as Date,
         location: location,
         imageId: newImageId,
         userId: (data?.user as any).id,
-      });
-
-      toast.success("Evento criado com sucesso!", {
-        duration: 2500,
       });
 
       setOpen(false);
@@ -152,9 +160,17 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
     }
   };
 
+  const submit = () => {
+    toast.promise(handleCreateEvent, {
+      loading: "Criando evento...",
+      success: "Evento criado com sucesso!",
+      error: "Ocorreu um erro ao criar evento, tente novamente!",
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="w-8/12 max-h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden">
+      <DialogContent className=" max-w-[540px] max-h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden">
         <DialogHeader>
           <DialogTitle className="text-3xl font-normal">
             Publicar Evento
@@ -169,6 +185,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
               Título do Evento
             </Label>
             <Input
+              disabled={loading}
               id="title"
               type="text"
               placeholder="Digite aqui.."
@@ -181,6 +198,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
               Adicione uma Imagem para ser capa do Evento
             </Label>
             <Input
+              disabled={loading}
               id="image"
               type="file"
               placeholder="Foto do Evento"
@@ -193,6 +211,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
               Dê uma descrição para o evento
             </Label>
             <Textarea
+              disabled={loading}
               id="description"
               className="text-base resize-none h-24"
               onChange={(e) => setDescription(e.target.value)}
@@ -205,6 +224,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
           >
             <div className="flex items-center gap-2">
               <RadioGroupItem
+                disabled={loading}
                 value="Presencial"
                 id="presencial"
                 className="border-black text-black"
@@ -215,6 +235,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
             </div>
             <div className="flex items-center gap-2">
               <RadioGroupItem
+                disabled={loading}
                 value="Online"
                 id="online"
                 className="border-black text-black"
@@ -229,32 +250,45 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
             <h1 className="text-base font-normal">
               Selecione a data inicial e a data final (se tiver).
             </h1>
-            <Calendar
-              mode="multiple"
-              className="w-full p-0"
-              locale={ptBR}
-              min={1}
-              max={2}
-              selected={selectedDates}
-              onSelect={(dates) => setSelectedDates(dates ?? [])}
-              fromDate={new Date()}
-              styles={{
-                caption: {
-                  textTransform: "capitalize",
-                },
-                head_cell: {
-                  textTransform: "capitalize",
-                },
-                nav_button_previous: {
-                  width: "32px",
-                  height: "32px",
-                },
-                nav_button_next: {
-                  width: "32px",
-                  height: "32px",
-                },
-              }}
-            />
+            <Popover open={popOpen} onOpenChange={setPopOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  disabled={loading}
+                  variant={"outline"}
+                  className="w-full text-left justify-start pl-5 font-normal text-base flex gap-2"
+                >
+                  <CalendarIcon size={18} />
+                  {date?.from ? (
+                    date.to ? (
+                      <>
+                        {format(date.from, "dd 'de' MMM',' yyyy", {
+                          locale: ptBR,
+                        })}{" "}
+                        -{" "}
+                        {format(date.to, "dd 'de' MMM',' yyyy", {
+                          locale: ptBR,
+                        })}
+                      </>
+                    ) : (
+                      format(date.from, "dd 'de' MMM',' yyyy", { locale: ptBR })
+                    )
+                  ) : (
+                    <p className="font-normal text-base">Escolher data</p>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  disabled={loading}
+                  initialFocus
+                  mode="range"
+                  defaultMonth={date?.from}
+                  selected={date}
+                  onSelect={setDate}
+                  numberOfMonths={2}
+                />
+              </PopoverContent>
+            </Popover>
           </div>
           <DialogFooter className="w-full mt-2">
             <DialogClose asChild className="w-full">
@@ -265,11 +299,11 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
             <Button
               variant={"default"}
               className="w-full bg-[#044CF4] flex gap-2"
-              onClick={handleCreateEvent}
+              onClick={submit}
               disabled={loading}
             >
               {loading && (
-                <ReloadIcon
+                <Loader
                   width={18}
                   height={18}
                   className="w-5 h-5 animate-spin"

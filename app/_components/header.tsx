@@ -3,20 +3,34 @@
 import Image from "next/image";
 import uniforlogo from "../../public/uniforlogo.svg";
 import { Button } from "./ui/button";
-import { useSession } from "next-auth/react";
-import { LogOut } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
+import { Loader, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CreateEventDialog from "./dialog-create-event";
 import AuthDialog from "./register-login";
 import ConfirmLogoutDialog from "./confirm-logout";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog";
 
 const Header = () => {
   const { data } = useSession();
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [openLogout, setOpenLogout] = useState(false);
+
+  const handleCloseAlertDialogLogout = () => {
+    setOpenLogout(false);
+  };
 
   const handlePublicarEvento = () => {
     setOpen(true);
@@ -27,7 +41,14 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    setOpenLogout(true);
+    try {
+      setLoading(true);
+      signOut();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,15 +62,12 @@ const Header = () => {
             </p>
           </div>
           <div className="flex gap-1">
-            <Button
-              variant={"ghost"}
-              className="text-base font-medium rounded-xl"
-            >
+            <Button variant={"ghost"} className="text-base font-medium">
               Precisa de Ajuda?
             </Button>
             <Button
               variant={"ghost"}
-              className="text-base underline text-[#044CF4] hover:text-[#044CF4] hover:no-underline font-medium rounded-xl"
+              className="text-base underline text-[#044CF4] hover:text-[#044CF4] hover:no-underline font-medium"
             >
               Todos os Eventos Disponíveis
             </Button>
@@ -58,7 +76,7 @@ const Header = () => {
         <div className="flex gap-6 items-center">
           <Button
             variant={"default"}
-            className="text-base font-medium rounded-xl bg-[#044CF4]"
+            className="text-base font-medium bg-[#044CF4]"
             onClick={handlePublicarEvento}
           >
             Publicar Evento
@@ -80,25 +98,57 @@ const Header = () => {
                 height={26}
                 className="rounded-full cursor-pointer"
               />
-              <Button
-                variant={"link"}
-                className="flex gap-1 items-center text-base text-black font-medium rounded-xl"
-                onClick={handleLogout}
-              >
-                <LogOut size={16} />
-                Sair
-              </Button>
-              {openLogout && (
-                <ConfirmLogoutDialog
-                  open={openLogout}
-                  setOpen={setOpenLogout}
-                />
-              )}
+              <AlertDialog open={openLogout} onOpenChange={setOpenLogout}>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant={"link"}
+                    className="flex gap-1 items-center text-base text-black font-medium rounded-xl"
+                  >
+                    <LogOut size={16} />
+                    Sair
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="font-normal text-2xl">
+                      Confirmação
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="text-base">
+                      Deseja deslogar do site?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="flex gap-2">
+                    <Button
+                      disabled={loading}
+                      variant={"outline"}
+                      className="w-full"
+                      onClick={handleCloseAlertDialogLogout}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      disabled={loading}
+                      variant={"default"}
+                      onClick={handleLogout}
+                      className="w-full bg-[#044CF4] flex gap-2"
+                    >
+                      {loading && (
+                        <Loader
+                          width={18}
+                          height={18}
+                          className="w-5 h-5 animate-spin"
+                        />
+                      )}
+                      Deslogar
+                    </Button>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           ) : (
             <Button
               variant={"link"}
-              className="text-black text-base font-medium rounded-xl"
+              className="text-black text-base font-medium"
               onClick={handleLogin}
             >
               Fazer Login

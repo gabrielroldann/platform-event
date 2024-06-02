@@ -5,6 +5,8 @@ import { authOptions } from "../_lib/auth";
 import { db } from "../_lib/prisma";
 import Header from "../_components/header";
 import Body from "../_components/body";
+import FAQ from "../_components/faq";
+import Footer from "../_components/footer";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -23,10 +25,13 @@ export default async function Home() {
         <Header />
       </div>
       <div className="mt-8 w-full flex items-center justify-center">
-        <div className="w-8/12">
+        <div className="w-8/12 flex flex-col gap-6">
           <Body />
+          <FAQ />
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

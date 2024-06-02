@@ -2,6 +2,7 @@
 
 import { db } from "../_lib/prisma";
 import EventCard from "./card-event-body";
+import EmptyEvents from "./empty-events";
 
 interface ShowEventsProps {
   eventType?: string;
@@ -38,7 +39,9 @@ const ShowEvents = async ({ eventType }: ShowEventsProps) => {
           ))}
         </div>
       ) : (
-        <div></div>
+        <div>
+          <EmptyEvents />
+        </div>
       )}
     </div>
   );
