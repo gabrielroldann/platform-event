@@ -58,7 +58,7 @@ const FAQ = () => {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-      {/* accordion 02 */}
+      {/* accordion 02
       <Accordion type="multiple" className="w-full">
         <AccordionItem value="pergunta6">
           <AccordionTrigger>
@@ -108,7 +108,7 @@ const FAQ = () => {
             para garantir a segurança de todas as transações.
           </AccordionContent>
         </AccordionItem>
-      </Accordion>
+      </Accordion> */}
     </div>
   );
 };
