@@ -3,7 +3,6 @@
 import { formatDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Card, CardContent, CardHeader } from "./ui/card";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface EventCardProps {
@@ -41,7 +40,7 @@ const EventCard = ({
   return (
     <>
       <Card
-        className="min-w-96 max-w-72 min-h-48 max-h-64 p-0 border-none shadow-none duration-300 hover:scale-95 cursor-pointer"
+        className="min-w-96 max-w-72 min-h-64 max-h-64 p-0 border-none shadow-none duration-300 hover:scale-95 cursor-pointer"
         // onClick={handleClickEventCard}
       >
         <CardHeader className="p-0 h-3/5 overflow-hidden rounded-xl">

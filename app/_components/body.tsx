@@ -1,17 +1,10 @@
 "use server";
 
-import { db } from "../_lib/prisma";
 import Search from "./search";
 import ShowEvents from "./show-events";
 import { Button } from "./ui/button";
 
 const Body = async () => {
-  const allEvents = await db.event.findMany({
-    include: {
-      Image: true,
-    },
-  });
-
   return (
     <div className="flex flex-col gap-8 mt-2">
       <div className="w-full">

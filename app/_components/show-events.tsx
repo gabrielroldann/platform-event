@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "../_lib/prisma";
-import EventCard from "./card-event-body";
+import EventCard from "./card-event";
 import EmptyEvents from "./empty-events";
 
 interface ShowEventsProps {
@@ -19,7 +19,11 @@ const ShowEvents = async ({ eventType }: ShowEventsProps) => {
       },
     },
     where: eventType ? { location: eventType } : {},
+    orderBy: {
+      startDate: "asc",
+    },
   });
+
   const listEvents = eventos.length;
 
   return (

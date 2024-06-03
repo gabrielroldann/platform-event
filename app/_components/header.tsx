@@ -51,11 +51,18 @@ const Header = () => {
     }
   };
 
+  const handleLogoClick = () => {
+    router.push("/");
+  };
+
   return (
     <div>
       <div className="flex justify-between">
         <div className="flex gap-3 items-center">
-          <div className="flex text-center gap-1 items-center hover:cursor-pointer">
+          <div
+            className="flex text-center gap-1 items-center hover:cursor-pointer"
+            onClick={handleLogoClick}
+          >
             <Image src={uniforlogo} alt="Unifor Logo" width={26} height={26} />
             <p className="h-fit text-[#044CF4] font-bold text-lg">
               UNIFOR EVENTS
