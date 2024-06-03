@@ -24,8 +24,6 @@ const Search = () => {
     }
   };
 
-  console.log(searchValue);
-
   const handleSearch = async () => {
     if (
       !searchValue ||
