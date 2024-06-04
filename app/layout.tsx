@@ -3,6 +3,7 @@ import { Fredoka } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "./_providers/auth";
 import { Toaster } from "sonner";
+import "animate.css";
 
 const font = Fredoka({ subsets: ["latin"] });
 

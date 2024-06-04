@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Accordion,
   AccordionContent,
@@ -5,7 +7,7 @@ import {
   AccordionTrigger,
 } from "./ui/accordion";
 
-const FAQ = () => {
+const FAQ: React.FC = () => {
   return (
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="pergunta1">
