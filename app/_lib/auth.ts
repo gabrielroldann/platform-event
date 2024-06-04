@@ -12,25 +12,6 @@ export const authOptions: AuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
-    CredentialsProvider({
-      name: "credentials",
-      credentials: {
-        name: { label: "Nome", type: "text" },
-        email: {
-          label: "Email",
-          type: "email",
-          placeholder: "jsmith@gmail.com",
-        },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials, req) {
-        if (!credentials) {
-          return null;
-        }
-
-        return null;
-      },
-    }),
   ],
   callbacks: {
     async session({ session, user }) {

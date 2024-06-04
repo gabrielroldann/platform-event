@@ -3,7 +3,6 @@
 import { formatDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Card, CardContent, CardHeader } from "./ui/card";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface EventCardProps {
@@ -25,13 +24,23 @@ const EventCard = ({
 }: EventCardProps) => {
   const router = useRouter();
 
+  const formattedStartDate = formatDate(startDate, "dd 'de' MMMM 'de' yyyy", {
+    locale: ptBR,
+  });
+
+  const formattedEndDate = endDate
+    ? formatDate(endDate, "dd 'de' MMMM 'de' yyyy", {
+        locale: ptBR,
+      })
+    : null;
+
   const handleClickEventCard = () => {
     router.push(`/event/${id}`);
   };
   return (
     <>
       <Card
-        className="min-w-96 max-w-72 min-h-48 max-h-64 p-0 border-none shadow-none duration-300 hover:scale-95 cursor-pointer"
+        className="min-w-[330px] max-w-[330px] min-h-64 max-h-64 p-0 border-none shadow-none duration-300 hover:scale-95 cursor-pointer"
         // onClick={handleClickEventCard}
       >
         <CardHeader className="p-0 h-3/5 overflow-hidden rounded-xl">
@@ -42,11 +51,15 @@ const EventCard = ({
           />
         </CardHeader>
         <CardContent className="p-0 mt-1 relative">
-          <p className="overflow-hidden text-nowrap text-ellipsis  text-muted-foreground text-sm">
-            {formatDate(startDate, "dd 'de' MMMM 'de' yyyy", {
-              locale: ptBR,
-            })}
-          </p>
+          <div className="overflow-hidden text-nowrap text-ellipsis text-muted-foreground text-sm">
+            {formattedEndDate ? (
+              <>
+                {formattedStartDate} - {formattedEndDate}
+              </>
+            ) : (
+              formattedStartDate
+            )}
+          </div>
           <p className="overflow-hidden text-ellipsis text-lg font-medium">
             {title}
           </p>

@@ -1,16 +1,11 @@
 "use server";
 
-import { db } from "../_lib/prisma";
-import EventCard from "./card-event";
-import EmptyEvents from "./empty-events";
+import EventCard from "@/app/_components/card-event";
+import EmptyEvents from "@/app/_components/empty-events";
+import { db } from "@/app/_lib/prisma";
 
-interface ShowEventsProps {
-  eventType?: string;
-}
-
-const ShowEvents = async ({ eventType }: ShowEventsProps) => {
-  const eventos = await db.event.findMany({
-    take: 8,
+const ShowAllEvents = async () => {
+  const events = await db.event.findMany({
     include: {
       Image: {
         select: {
@@ -18,19 +13,18 @@ const ShowEvents = async ({ eventType }: ShowEventsProps) => {
         },
       },
     },
-    where: eventType ? { location: eventType } : {},
     orderBy: {
       startDate: "asc",
     },
   });
 
-  const listEvents = eventos.length;
+  const listEvents = events.length;
 
   return (
     <div>
       {listEvents > 0 ? (
-        <div className="flex gap-3 min-w-72 overflow-x-auto scrollbar-webkit scrollbar-thumb pb-2">
-          {eventos.map((event) => (
+        <div className="flex flex-wrap gap-3 min-w-60 overflow-x-auto scrollbar-webkit scrollbar-thumb pb-2">
+          {events.map((event) => (
             <EventCard
               key={event.id}
               id={event.id}
@@ -51,4 +45,4 @@ const ShowEvents = async ({ eventType }: ShowEventsProps) => {
   );
 };
 
-export default ShowEvents;
+export default ShowAllEvents;
