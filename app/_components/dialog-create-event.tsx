@@ -103,6 +103,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
       }
 
       setPopOpen(false);
+      setOpen(false);
       setLoading(true);
 
       // if (selectedDates[0].getTime < selectedDates[1].getTime) {
@@ -145,7 +146,6 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         userId: (data?.user as any).id,
       });
 
-      setOpen(false);
       router.refresh();
 
       // router.push(`/event/${newEvent.id}`);

@@ -7,8 +7,9 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
 import { db } from "../_lib/prisma";
 
-const generateFileName = (bytes = 32) =>
-  crypto.randomBytes(bytes).toString("hex");
+const generateFileName = (bytes = 32) => {
+  return crypto.randomBytes(bytes).toString("hex");
+};
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION!,

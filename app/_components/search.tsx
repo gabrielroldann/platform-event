@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Event } from "@prisma/client";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -9,22 +9,24 @@ import { toast } from "sonner";
 import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-interface SearchProps {
-  allEvents: Event[];
-}
-
 const Search = () => {
-  const [searchValue, setSearchValue] = useState<string>();
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [lastValueSearch, setLastValueSearch] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
+  useEffect(() => {
+    if (searchValue) {
+      setLastValueSearch(decodeURIComponent(searchValue));
+    }
+  }, [searchValue]);
+
+  console.log(searchValue);
   const enterClicked = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSearch();
     }
   };
-
-  console.log(searchValue);
 
   const handleSearch = async () => {
     if (
@@ -38,12 +40,19 @@ const Search = () => {
         duration: 2000,
       });
     }
+    try {
+      const search = searchValue.trim();
 
-    const search = searchValue.trim();
+      setLastValueSearch(search);
+      setLoading(true);
 
-    setLoading(true);
-
-    router.push(`/search-result?search=${encodeURIComponent(search)}`);
+      router.push(`/search-result?search=${encodeURIComponent(search)}`);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+      setSearchValue("");
+    }
   };
 
   return (
@@ -54,8 +63,8 @@ const Search = () => {
         </Label>
         <div className="flex gap-1">
           <Input
-            id="search"
             disabled={loading}
+            id="search"
             placeholder="Exemplo: Céus Noturnos"
             className="text-base py-4"
             value={searchValue}
@@ -68,7 +77,11 @@ const Search = () => {
             onClick={handleSearch}
             className="bg-[#044CF4] p-3 font-normal text-base"
           >
-            {loading ? <Loader size={24} className="animate-spin" /> : "Buscar"}
+            {loading ? (
+              <Loader size={24} className="animated-spin" />
+            ) : (
+              "Buscar"
+            )}
           </Button>
         </div>
       </div>
