@@ -9,26 +9,26 @@ interface ShowEventsProps {
 }
 
 const ShowEvents = async ({ eventType }: ShowEventsProps) => {
-  const eventos = await db.event.findMany({
-    take: 8,
-    include: {
-      Image: {
-        select: {
-          url: true,
-        },
-      },
-    },
-    where: eventType ? { location: eventType } : {},
-    orderBy: {
-      startDate: "asc",
-    },
-  });
+  // const eventos = await db.event.findMany({
+  //   take: 8,
+  //   include: {
+  //     Image: {
+  //       select: {
+  //         url: true,
+  //       },
+  //     },
+  //   },
+  //   where: eventType ? { location: eventType } : {},
+  //   orderBy: {
+  //     startDate: "asc",
+  //   },
+  // });
 
-  const listEvents = eventos.length;
+  // const listEvents = eventos.length;
 
   return (
     <div>
-      {listEvents > 0 ? (
+      {/* {listEvents > 0 ? (
         <div className="flex gap-3 min-w-72 overflow-x-auto scrollbar-webkit scrollbar-thumb pb-2">
           {eventos.map((event) => (
             <EventCard
@@ -46,7 +46,7 @@ const ShowEvents = async ({ eventType }: ShowEventsProps) => {
         <div>
           <EmptyEvents />
         </div>
-      )}
+      )} */}
     </div>
   );
 };
