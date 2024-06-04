@@ -16,7 +16,7 @@ const BodySearch = ({ searchValue }: BodySearchProps) => {
       <div className="w-full">
         <Search />
       </div>
-      <div className="mt-6">
+      <div className="mt-6 animate__animated animate__fadeIn">
         <div>
           {searchValue ? (
             <div className="flex flex-col gap-6">

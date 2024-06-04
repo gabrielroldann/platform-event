@@ -41,7 +41,7 @@ const AuthDialog = ({ open, setOpen }: AuthDialogProps) => {
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="w-8/12 max-h-[600px]">
+      <DialogContent className="w-8/12 max-h-[600px] overflow-hidden">
         <DialogHeader>
           <DialogTitle className="text-2xl font-normal">
             Fazer login
@@ -125,9 +125,9 @@ const AuthDialog = ({ open, setOpen }: AuthDialogProps) => {
           </Button>
 
           <div className="flex gap-1">
-            <p className="text-base font-normal">Já possui uma conta?</p>
+            <p className="text-base font-normal">Ainda não possui uma conta?</p>
             <p className="text-base text-primary font-normal hover:underline hover:cursor-pointer">
-              Faça login.
+              Registre-se.
             </p>
           </div>
 

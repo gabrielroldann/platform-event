@@ -60,7 +60,7 @@ const Header = () => {
   };
 
   return (
-    <div>
+    <div className="animate__animated animate__fadeInDown">
       <div className="flex justify-between">
         <div className="flex gap-3 items-center">
           <div

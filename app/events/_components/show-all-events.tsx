@@ -1,26 +1,27 @@
-"use client";
+"use server";
 
 import { GetEvents } from "@/app/_actions/get-events";
 import EventCard from "@/app/_components/card-event";
 import EmptyEvents from "@/app/_components/empty-events";
+import { Input } from "@/app/_components/ui/input";
+import { Label } from "@/app/_components/ui/label";
 import { db } from "@/app/_lib/prisma";
-import { Event } from "@prisma/client";
-import { useEffect, useState } from "react";
 
-const ShowAllEvents = () => {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [search, setSearch] = useState("");
+const BodyAllEvents = async () => {
+  const events = await db.event.findMany({
+    include: {
+      Image: {
+        select: {
+          url: true,
+        },
+      },
+    },
+    orderBy: {
+      startDate: "asc",
+    },
+  });
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const response = await GetEvents();
-      setEvents(response);
-    };
-
-    fetchEvents();
-  }, []);
-
-  console.log(events);
+  const handleSearch = () => {};
 
   const listEvents = events.length;
 
@@ -52,4 +53,4 @@ const ShowAllEvents = () => {
   );
 };
 
-export default ShowAllEvents;
+export default BodyAllEvents;
