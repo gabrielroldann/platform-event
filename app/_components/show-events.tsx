@@ -29,7 +29,7 @@ const ShowEvents = async ({ eventType }: ShowEventsProps) => {
   return (
     <div>
       {listEvents > 0 ? (
-        <div className="flex gap-3 min-w-72 overflow-x-auto scrollbar-webkit scrollbar-thumb pb-2">
+        <div className="flex gap-3 min-w-64 overflow-x-auto scrollbar-webkit scrollbar-thumb pb-2">
           {eventos.map((event) => (
             <EventCard
               key={event.id}
