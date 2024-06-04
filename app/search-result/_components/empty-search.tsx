@@ -10,12 +10,13 @@ const EmptySearch = () => {
     router.push("/");
   };
   return (
-    <div className="flex flex-col gap-2 items-center mt-6">
-      <p>Não existe uma busca ou ocorreu algum erro na busca</p>
+    <div className="flex flex-col gap-4 items-center mt-12 mb-12">
+      <p className="text-center">
+        Não foram encontrados resultados para a sua busca.
+      </p>
       <Button
-        variant={"default"}
         onClick={handleBackHomePage}
-        className="flex gap-2"
+        className="flex gap-2 bg-[#044CF4] font-normal"
       >
         <ChevronLeft size={16} />
         Voltar para a página inicial

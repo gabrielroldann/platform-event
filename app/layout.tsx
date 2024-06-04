@@ -21,7 +21,7 @@ export default function RootLayout({
         <AuthProvider>
           {children}
           <Toaster
-            theme="light"
+            theme="dark"
             richColors
             expand={false}
             visibleToasts={3}

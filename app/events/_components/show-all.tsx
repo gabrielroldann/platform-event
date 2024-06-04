@@ -1,14 +1,10 @@
 "use server";
 
 import EventCard from "@/app/_components/card-event";
+import EmptyEvents from "@/app/_components/empty-events";
 import { db } from "@/app/_lib/prisma";
-import EmptySearch from "./empty-search";
 
-interface ShowEventsSearchProps {
-  searchParam: string;
-}
-
-const ShowEventsSearch = async ({ searchParam }: ShowEventsSearchProps) => {
+const ShowAllEvents = async () => {
   const events = await db.event.findMany({
     include: {
       Image: {
@@ -17,26 +13,17 @@ const ShowEventsSearch = async ({ searchParam }: ShowEventsSearchProps) => {
         },
       },
     },
-    where: {
-      title: {
-        contains: searchParam,
-        mode: "insensitive",
-      },
-    },
     orderBy: {
       startDate: "asc",
     },
   });
 
-  console.log(events);
-
   const listEvents = events.length;
-  console.log(listEvents);
 
   return (
     <div>
       {listEvents > 0 ? (
-        <div className="flex flex-wrap gap-3 min-w-72 overflow-x-auto scrollbar-webkit scrollbar-thumb pb-2">
+        <div className="flex flex-wrap gap-3 min-w-60 overflow-x-auto scrollbar-webkit scrollbar-thumb pb-2">
           {events.map((event) => (
             <EventCard
               key={event.id}
@@ -51,11 +38,11 @@ const ShowEventsSearch = async ({ searchParam }: ShowEventsSearchProps) => {
         </div>
       ) : (
         <div>
-          <EmptySearch />
+          <EmptyEvents />
         </div>
       )}
     </div>
   );
 };
 
-export default ShowEventsSearch;
+export default ShowAllEvents;

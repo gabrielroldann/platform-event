@@ -51,6 +51,10 @@ const Header = () => {
     }
   };
 
+  const handleClickAllEvents = () => {
+    router.push("/events");
+  };
+
   const handleLogoClick = () => {
     router.push("/");
   };
@@ -75,6 +79,7 @@ const Header = () => {
             <Button
               variant={"ghost"}
               className="text-base underline text-[#044CF4] hover:text-[#044CF4] hover:no-underline font-medium"
+              onClick={handleClickAllEvents}
             >
               Todos os Eventos Disponíveis
             </Button>
