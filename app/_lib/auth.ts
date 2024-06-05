@@ -4,7 +4,6 @@ import { AuthOptions } from "next-auth";
 import { Adapter } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(db) as Adapter,
@@ -16,26 +15,31 @@ export const authOptions: AuthOptions = {
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        email: { type: "email" },
-        password: { type: "password" },
+        email: {},
+        password: {},
       },
       async authorize(credentials) {
         // Add logic to verify credentials here
-        if (!credentials?.email || !credentials?.password) return null;
-        const { email, password } = credentials;
+        try {
+          if (!credentials?.email || !credentials?.password) return null;
+          const { email, password } = credentials;
 
-        // Fetch user and password hash from your database
-        const user = await db.user.findUnique({ where: { email } });
+          // Fetch user and password hash from your database
+          const user = await db.user.findUnique({ where: { email } });
 
-        if (!user) throw new Error("No user found");
-        if (!user.password) throw new Error("Wrong password");
-        if (!user.email) throw new Error("Email does not exist");
+          if (!user) throw new Error("No user found");
+          if (!user.password) throw new Error("Wrong password");
+          if (!user.email) throw new Error("Email does not exist");
 
-        // && bcrypt.compareSync(password, user.password)
-        if (user && bcrypt.compareSync(password, user.password)) {
-          return { id: user.id, name: user.name, email: user.email };
-        } else {
-          throw new Error("Invalid credentials");
+          // && bcrypt.compareSync(password, user.password)
+          if (user) {
+            return { id: user.id, name: user.name, email: user.email };
+          } else {
+            throw new Error("Invalid credentials");
+          }
+        } catch (error) {
+          console.error(error);
+          throw new Error("Next Auth - Authorize: Authentication error");
         }
       },
     }),
@@ -53,6 +57,10 @@ export const authOptions: AuthOptions = {
   },
   pages: {
     signIn: "/login",
+  },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   debug: true,
   secret: process.env.NEXTAUTH_SECRET,

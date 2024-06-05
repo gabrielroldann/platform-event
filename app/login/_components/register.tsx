@@ -51,10 +51,8 @@ const Register = ({ animation, changeAnimation }: RegisterProps) => {
       });
 
       signIn("credentials", {
-        email: email,
-        password: password,
-        redirect: true,
-        callbackUrl: "/",
+        email,
+        password,
       });
 
       console.log(user);

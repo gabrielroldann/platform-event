@@ -38,7 +38,7 @@ export const RegisterUser = async ({
   const validPassword = ValidatePassword(password);
   const validEmail = ValidateEmail(email);
 
-  //   const passwordHash = await bcrypt.hash(password, 10);
+  // const passwordHash = await bcrypt.hash(password, 10);
 
   if (!name) return { error: "Digite seu nome" };
 

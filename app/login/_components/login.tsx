@@ -46,8 +46,9 @@ const Login = ({ animation, changeAnimation }: LoginProps) => {
   //   }
   // };
 
-  const handleCredentialLogin = async () => {
-    await signIn("credentials", {
+  const handleCredentialLogin = () => {
+    signIn("credentials", {
+      redirect: true,
       email: email,
       password: password,
     });
