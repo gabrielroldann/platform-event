@@ -8,7 +8,6 @@ import { Loader, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CreateEventDialog from "./dialog-create-event";
-import AuthDialog from "./register-login";
 import ConfirmLogoutDialog from "./confirm-logout";
 import {
   AlertDialog,
