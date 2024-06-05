@@ -97,18 +97,12 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         !image ||
         selectedDates.length === 0
       ) {
-        return toast.info("Preencha todos os campos para criar o evento!", {
-          duration: 2500,
-        });
+        return;
       }
 
       setPopOpen(false);
       setOpen(false);
       setLoading(true);
-
-      // if (selectedDates[0].getTime < selectedDates[1].getTime) {
-      //   selectedDates[1] = selectedDates[0];
-      // }
 
       const checksum = await computeSHA256(image);
       const signedUrlResult = await getSignedURL(
@@ -116,6 +110,8 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         image.size,
         checksum
       );
+
+      console.log(signedUrlResult);
 
       if (signedUrlResult.error !== undefined) {
         return toast.error(
@@ -151,16 +147,25 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
       // router.push(`/event/${newEvent.id}`);
     } catch (error) {
       console.log(error);
-      toast.error("Ocorreu um erro ao criar evento, tente novamente!", {
-        description: "Se o erro persistir entre em contato com o suporte.",
-        duration: 2500,
-      });
+      return;
     } finally {
       setLoading(false);
     }
   };
 
   const submit = () => {
+    if (
+      !title ||
+      !description ||
+      !location ||
+      !image ||
+      !date ||
+      selectedDates.length === 0
+    ) {
+      return toast.info("Preencha todos os campos para criar o evento!", {
+        duration: 2500,
+      });
+    }
     toast.promise(handleCreateEvent, {
       loading: "Criando evento...",
       success: "Evento criado com sucesso!",
@@ -281,6 +286,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
                 <Calendar
                   disabled={loading}
                   initialFocus
+                  fromDate={new Date()}
                   mode="range"
                   defaultMonth={date?.from}
                   selected={date}

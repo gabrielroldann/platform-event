@@ -3,7 +3,7 @@
 import Image from "next/image";
 import uniforlogo from "../../public/uniforlogo.svg";
 import { Button } from "./ui/button";
-import { signOut, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { Loader, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -36,8 +36,8 @@ const Header = () => {
     setOpen(true);
   };
 
-  const handleLogin = () => {
-    setOpen(true);
+  const handleAuth = () => {
+    signIn();
   };
 
   const handleLogout = () => {
@@ -85,7 +85,7 @@ const Header = () => {
             </Button>
           </div>
         </div>
-        <div className="flex gap-6 items-center">
+        <div className="flex gap-4 items-center">
           <Button
             variant={"default"}
             className="text-base font-medium bg-[#044CF4]"
@@ -93,11 +93,6 @@ const Header = () => {
           >
             Publicar Evento
           </Button>
-          {data && open === true ? (
-            <CreateEventDialog open={open} setOpen={setOpen} />
-          ) : (
-            <AuthDialog open={open} setOpen={setOpen} />
-          )}
           {data ? (
             <div className="flex gap-2 items-center">
               {/* <Avatar>
@@ -161,9 +156,9 @@ const Header = () => {
             <Button
               variant={"link"}
               className="text-black text-base font-medium"
-              onClick={handleLogin}
+              onClick={handleAuth}
             >
-              Fazer Login
+              Fazer Login / Cadastrar
             </Button>
           )}
         </div>
