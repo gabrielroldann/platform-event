@@ -31,24 +31,10 @@ const Login = ({ animation, changeAnimation }: LoginProps) => {
     setPwVisible(!pwVisible);
   };
 
-  // const handleCredentialLogin = async () => {
-  //   try {
-  //     if (!email || !password) return toast.error("Preencha todos os campos");
-  //     setLoading(true);
-  //     signIn("credentials", {
-  //       email: email,
-  //       password: password,
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleCredentialLogin = () => {
     signIn("credentials", {
       redirect: true,
+      callbackUrl: "/",
       email: email,
       password: password,
     });

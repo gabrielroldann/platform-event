@@ -92,18 +92,21 @@ const Header = () => {
           >
             Publicar Evento
           </Button>
+          {/* <CreateEventDialog open={open} onOpenChange={setOpen} /> */}
           {data ? (
             <div className="flex gap-2 items-center">
               {/* <Avatar>
                 <AvatarImage src={data?.user?.image as any} />
               </Avatar> */}
-              <Image
-                src={data?.user?.image as any}
-                alt={data?.user?.name as string}
-                width={30}
-                height={26}
-                className="rounded-full cursor-pointer"
-              />
+              {data.user.image ? (
+                <Image
+                  src={data?.user?.image as any}
+                  alt={data?.user?.name as string}
+                  width={30}
+                  height={26}
+                  className="rounded-full cursor-pointer"
+                />
+              ) : null}
               <AlertDialog open={openLogout} onOpenChange={setOpenLogout}>
                 <AlertDialogTrigger asChild>
                   <Button

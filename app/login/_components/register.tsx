@@ -34,10 +34,7 @@ const Register = ({ animation, changeAnimation }: RegisterProps) => {
   };
 
   const handleGoogleLogin = () => {
-    signIn("google", {
-      redirect: true,
-      callbackUrl: "/",
-    });
+    signIn("google", {});
   };
 
   const handleRegister = async () => {
@@ -51,6 +48,8 @@ const Register = ({ animation, changeAnimation }: RegisterProps) => {
       });
 
       signIn("credentials", {
+        redirect: true,
+        callbackUrl: "/",
         email,
         password,
       });
