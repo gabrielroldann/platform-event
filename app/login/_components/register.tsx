@@ -47,13 +47,6 @@ const Register = ({ animation, changeAnimation }: RegisterProps) => {
         confirmPassword: confirmPassword,
       });
 
-      signIn("credentials", {
-        redirect: true,
-        callbackUrl: "/",
-        email,
-        password,
-      });
-
       console.log(user);
 
       if (user.error !== undefined) {
@@ -64,6 +57,12 @@ const Register = ({ animation, changeAnimation }: RegisterProps) => {
         router.refresh();
         return toast.success(user.success.message, { duration: 3000 });
       }
+
+      await signIn("credentials", {
+        callbackUrl: "/",
+        email,
+        password,
+      }).then(() => router.push("/"));
     } catch (error) {
       toast.error("Erro ao registrar, contate o suporte", { duration: 3000 });
     } finally {

@@ -32,7 +32,11 @@ const Header = () => {
   };
 
   const handlePublicarEvento = () => {
-    setOpen(true);
+    if (data) {
+      setOpen(true);
+    } else {
+      router.push("/login");
+    }
   };
 
   const handleAuth = () => {
@@ -92,7 +96,7 @@ const Header = () => {
           >
             Publicar Evento
           </Button>
-          {/* <CreateEventDialog open={open} onOpenChange={setOpen} /> */}
+          <CreateEventDialog open={open} setOpen={setOpen} />
           {data ? (
             <div className="flex gap-2 items-center">
               {/* <Avatar>
