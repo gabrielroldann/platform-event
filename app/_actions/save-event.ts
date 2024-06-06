@@ -9,7 +9,6 @@ interface EventParams {
   endDate: Date;
   location: string;
   imageId: string;
-  userId: string;
 }
 
 export const SaveEvent = async (params: EventParams) => {
@@ -21,7 +20,6 @@ export const SaveEvent = async (params: EventParams) => {
       endDate: params.endDate,
       location: params.location,
       imageId: params.imageId,
-      userId: params.userId,
     },
   });
 

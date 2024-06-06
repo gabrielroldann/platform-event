@@ -139,7 +139,6 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         endDate: to as Date,
         location: location,
         imageId: newImageId,
-        userId: (data?.user as any).id,
       });
 
       router.refresh();

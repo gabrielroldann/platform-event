@@ -21,7 +21,7 @@
     "@auth/prisma-adapter": "^2.1.0",
     "@aws-sdk/client-s3": "^3.587.0",
     "@aws-sdk/s3-request-presigner": "^3.587.0",
-    "@prisma/client": "^5.14.0",
+    "@prisma/client": "^5.15.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
