@@ -9,8 +9,9 @@ import BodyAllEvents from "./_components/show-all-events";
 import { authOptions } from "../_lib/auth";
 import ShowEvents from "../_components/show-events";
 
-const AllEventsPage = () => {
-  const session = getServerSession(authOptions);
+const AllEventsPage = async () => {
+  const session = await getServerSession(authOptions);
+  console.log("/events session: ", session?.user);
 
   return (
     <div>

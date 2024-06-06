@@ -4,6 +4,7 @@ import { AuthOptions } from "next-auth";
 import { Adapter } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { User } from "@prisma/client";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(db) as Adapter,
@@ -15,17 +16,19 @@ export const authOptions: AuthOptions = {
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        email: {},
-        password: {},
+        email: { type: "email" },
+        password: { type: "password" },
       },
       async authorize(credentials) {
         // Add logic to verify credentials here
         try {
           if (!credentials?.email || !credentials?.password) return null;
           const { email, password } = credentials;
+          console.log("credentials: ", credentials);
 
           // Fetch user and password hash from your database
           const user = await db.user.findUnique({ where: { email } });
+          console.log("user: ", user);
 
           if (!user) throw new Error("No user found");
           if (!user.password) throw new Error("Wrong password");
@@ -45,14 +48,28 @@ export const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
-      session.user = { ...session.user, id: user.id } as {
-        id: string;
-        name: string;
-        email: string;
-      };
+    async session({ session, user, token }) {
+      // console.log("session: ", session);
+      // console.log("user: ", user);
+      // console.log("token: ", token);
+      // session.user = user as User;
+      // session.user = { ...session.user, id: user.id } as {
+      //   id: string;
+      //   name: string;
+      //   email: string;
+      // };
+      console.log(session.user);
+      // if (session.user) {
+      //   session.user.id = user.id;
+      // }
 
       return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.uid = user.id;
+      }
+      return token;
     },
   },
   pages: {
@@ -60,7 +77,6 @@ export const authOptions: AuthOptions = {
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   debug: true,
   secret: process.env.NEXTAUTH_SECRET,
