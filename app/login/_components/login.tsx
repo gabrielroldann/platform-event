@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Eye, EyeOff, Loader } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import iconGoogle2 from "../../../public/iconGoogle2.svg";
 
 interface LoginProps {
   animation: string;
@@ -127,7 +128,7 @@ const Login = ({ animation, changeAnimation }: LoginProps) => {
           className="w-full flex gap-2 text-base font-normal shadow-sm hover:shadow-md transition-all duration-200"
           onClick={handleGoogleLogin}
         >
-          {/* <Image src={iconGoogle2} alt="google.svg" width={30} height={30} /> */}
+          <Image src={iconGoogle2} alt="google.svg" width={30} height={30} />
           Continuar com Google
         </Button>
       </div>

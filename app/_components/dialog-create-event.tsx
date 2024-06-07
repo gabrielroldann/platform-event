@@ -115,7 +115,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
 
       if (signedUrlResult.error !== undefined) {
         return toast.error(
-          "Ocorreu um erro ao criar evento, tente novamente!",
+          "Ocorreu um erro ao publicar evento, tente novamente!",
           {
             duration: 2500,
           }
@@ -161,14 +161,14 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
       !date ||
       selectedDates.length === 0
     ) {
-      return toast.info("Preencha todos os campos para criar o evento!", {
+      return toast.info("Preencha todos os campos para publicar o evento!", {
         duration: 2500,
       });
     }
     toast.promise(handleCreateEvent, {
-      loading: "Criando evento...",
-      success: "Evento criado com sucesso!",
-      error: "Ocorreu um erro ao criar evento, tente novamente!",
+      loading: "Publicando evento...",
+      success: "Evento publicado com sucesso!",
+      error: "Ocorreu um erro ao publicar o evento, tente novamente!",
     });
   };
 
@@ -206,7 +206,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
               id="image"
               type="file"
               placeholder="Foto do Evento"
-              className="text-lg h-40"
+              className="text-lg text-center"
               onChange={handleChange}
             />
           </div>
