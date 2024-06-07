@@ -16,6 +16,7 @@ model User {
   image         String?
   typeUserId    String?
   password      String?
+  
   AcademicWork  AcademicWork[]
   Comment       Comment[]
   Diary         Diary[]

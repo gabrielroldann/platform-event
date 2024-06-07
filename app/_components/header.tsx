@@ -8,7 +8,6 @@ import { Loader, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CreateEventDialog from "./dialog-create-event";
-import ConfirmLogoutDialog from "./confirm-logout";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -18,14 +17,47 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
+import { Avatar, AvatarImage } from "./ui/avatar";
+import Perfil from "./perfil";
+import { Dialog, DialogContent } from "./ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import { GetUser } from "../_actions/get-user";
+import { User } from "@prisma/client";
+import { toast } from "sonner";
 
 const Header = () => {
   const { data } = useSession();
+  const [currentUser, setCurrentUser] = useState<User | null>();
+
+  const handleUser = async () => {
+    const user = await GetUser(data?.user.email as string);
+    setCurrentUser(user);
+  };
+
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [openLogout, setOpenLogout] = useState(false);
+
+  const [openPerfil, setOpenPerfil] = useState(false);
+
+  const escClicked = (e: KeyboardEvent) => {
+    e.preventDefault();
+  };
+
+  const mouseOut = (e: PointerEvent) => {
+    e.preventDefault();
+  };
+
+  const handleOpenPerfil = () => {
+    setOpenPerfil(true);
+  };
 
   const handleCloseAlertDialogLogout = () => {
     setOpenLogout(false);
@@ -99,18 +131,34 @@ const Header = () => {
           <CreateEventDialog open={open} setOpen={setOpen} />
           {data ? (
             <div className="flex gap-2 items-center">
-              {/* <Avatar>
-                <AvatarImage src={data?.user?.image as any} />
-              </Avatar> */}
-              {data.user.image ? (
-                <Image
-                  src={data?.user?.image as any}
-                  alt={data?.user?.name as string}
-                  width={30}
-                  height={26}
-                  className="rounded-full cursor-pointer"
-                />
-              ) : null}
+              {data.user.image && (
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Avatar>
+                        <AvatarImage
+                          src={data?.user?.image as string}
+                          alt={data?.user?.name}
+                          onClick={handleOpenPerfil}
+                          className="cursor-pointer"
+                        />
+                      </Avatar>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Perfil</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+              <Dialog
+                modal={true}
+                open={openPerfil}
+                onOpenChange={setOpenPerfil}
+              >
+                <DialogContent onEscapeKeyDown={escClicked}>
+                  <Perfil />
+                </DialogContent>
+              </Dialog>
               <AlertDialog open={openLogout} onOpenChange={setOpenLogout}>
                 <AlertDialogTrigger asChild>
                   <Button
