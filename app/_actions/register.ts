@@ -9,6 +9,7 @@ interface RegisterParams {
   email: string;
   password: string;
   confirmPassword: string;
+  typeUser: string;
 }
 
 const ValidateEmail = (email: string) => {
@@ -33,12 +34,11 @@ export const RegisterUser = async ({
   email,
   password,
   confirmPassword,
+  typeUser,
 }: RegisterParams) => {
   const validPasswordLength = ValidatePasswordLength(password);
   const validPassword = ValidatePassword(password);
   const validEmail = ValidateEmail(email);
-
-  // const passwordHash = await bcrypt.hash(password, 10);
 
   if (!name) return { error: "Digite seu nome" };
 
@@ -60,11 +60,14 @@ export const RegisterUser = async ({
 
   if (user) return { error: "Email já cadastrado" };
 
+  const passwordHash = await bcrypt.hash(password, 10);
+
   const newUser = await db.user.create({
     data: {
       name: name,
       email: email,
-      password: password,
+      password: passwordHash,
+      typeUser: typeUser,
     },
   });
 

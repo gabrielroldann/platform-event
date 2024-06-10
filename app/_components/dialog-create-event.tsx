@@ -53,7 +53,6 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
   });
 
   const { from, to } = date ?? {};
-  console.log(from as Date, to as Date);
 
   const initiallySelectedDates = [eventStartDate, eventEndDate];
   const [selectedDates, setSelectedDates] = useState(initiallySelectedDates);
@@ -143,7 +142,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
 
       router.refresh();
 
-      // router.push(`/event/${newEvent.id}`);
+      router.push(`/event/${newEvent.id}`);
     } catch (error) {
       console.log(error);
       return;
@@ -168,6 +167,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
     toast.promise(handleCreateEvent, {
       loading: "Publicando evento...",
       success: "Evento publicado com sucesso!",
+      description: "Redirecionando para a página do evento...",
       error: "Ocorreu um erro ao publicar o evento, tente novamente!",
     });
   };

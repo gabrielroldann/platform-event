@@ -4,7 +4,7 @@ import Image from "next/image";
 import uniforlogo from "../../public/uniforlogo.svg";
 import { Button } from "./ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { Loader, LogOut } from "lucide-react";
+import { Loader, LogOut, UserCircle2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CreateEventDialog from "./dialog-create-event";
@@ -107,10 +107,6 @@ const Header = () => {
               UNIFOR EVENTS
             </p>
           </div>
-          <div className="flex gap-1">
-            <Button variant={"ghost"} className="text-base font-medium">
-              Precisa de Ajuda?
-            </Button>
             <Button
               variant={"ghost"}
               className="text-base underline text-[#044CF4] hover:text-[#044CF4] hover:no-underline font-medium"
@@ -118,7 +114,6 @@ const Header = () => {
             >
               Todos os Eventos Disponíveis
             </Button>
-          </div>
         </div>
         <div className="flex gap-4 items-center">
           <Button
@@ -131,7 +126,7 @@ const Header = () => {
           <CreateEventDialog open={open} setOpen={setOpen} />
           {data ? (
             <div className="flex gap-2 items-center">
-              {data.user.image && (
+              {data.user.image ? (
                 <TooltipProvider delayDuration={100}>
                   <Tooltip>
                     <TooltipTrigger>
@@ -143,6 +138,17 @@ const Header = () => {
                           className="cursor-pointer"
                         />
                       </Avatar>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Perfil</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <UserCircle2 size={36} onClick={handleOpenPerfil} />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Perfil</p>

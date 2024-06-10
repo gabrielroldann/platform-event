@@ -11,6 +11,8 @@ import { Eye, EyeOff, Loader } from "lucide-react";
 import { RegisterUser } from "../../_actions/register";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { RadioGroup, RadioGroupItem } from "@/app/_components/ui/radio-group";
+import iconGoogle2 from "../../../public/iconGoogle2.svg";
 
 interface RegisterProps {
   animation: string;
@@ -24,6 +26,7 @@ const Register = ({ animation, changeAnimation }: RegisterProps) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [typeUser, setTypeUser] = useState<string>("Participante");
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -33,11 +36,16 @@ const Register = ({ animation, changeAnimation }: RegisterProps) => {
     setPwVisible(!pwVisible);
   };
 
-  const handleGoogleLogin = () => {
-    signIn("google", {});
-  };
+  // const handleGoogleLogin = () => {
+  //   signIn("google", {});
+  // };
+
+  console.log(typeUser);
 
   const handleRegister = async () => {
+    if (!nomeCompleto || !email || !password || !confirmPassword || !typeUser) {
+      return toast.info("Preencha todos os campos", { duration: 3000 });
+    }
     try {
       setLoading(true);
       const user = await RegisterUser({
@@ -45,6 +53,7 @@ const Register = ({ animation, changeAnimation }: RegisterProps) => {
         email: email,
         password: password,
         confirmPassword: confirmPassword,
+        typeUser: typeUser,
       });
 
       console.log(user);
@@ -54,19 +63,17 @@ const Register = ({ animation, changeAnimation }: RegisterProps) => {
       }
 
       if (user.success !== undefined) {
-        router.refresh();
         return toast.success(user.success.message, { duration: 3000 });
       }
-
-      await signIn("credentials", {
-        callbackUrl: "/",
-        email,
-        password,
-      }).then(() => router.push("/"));
     } catch (error) {
       toast.error("Erro ao registrar, contate o suporte", { duration: 3000 });
     } finally {
       setLoading(false);
+      await signIn("credentials", {
+        callbackUrl: "/",
+        email,
+        password,
+      });
     }
   };
 
@@ -144,13 +151,41 @@ const Register = ({ animation, changeAnimation }: RegisterProps) => {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
+          <RadioGroup
+            className="flex flex-col gap-1"
+            defaultValue="Participante"
+            onValueChange={setTypeUser}
+          >
+            <div className="flex gap-1 items-center">
+              <RadioGroupItem
+                disabled={loading}
+                id="participante"
+                value="Participante"
+                className="border-black text-black"
+              ></RadioGroupItem>
+              <Label htmlFor="participante" className="text-base font-normal">
+                Participante
+              </Label>
+            </div>
+            <div className="flex gap-1 items-center">
+              <RadioGroupItem
+                disabled={loading}
+                id="organizador"
+                value="Organizador"
+                className="border-black text-black"
+              ></RadioGroupItem>
+              <Label htmlFor="organizador" className="text-base font-normal">
+                Organizador
+              </Label>
+            </div>
+          </RadioGroup>
         </div>
 
         <Button disabled={loading} onClick={handleRegister} variant={"default"}>
           {loading ? (
             <Loader size={24} className="animate-spin" />
           ) : (
-            "Cadastrar"
+            <p className="text-base font-normal">Cadastrar</p>
           )}
         </Button>
 
@@ -165,22 +200,22 @@ const Register = ({ animation, changeAnimation }: RegisterProps) => {
         </div>
 
         {/* SEPARATORS */}
-        <div className="flex justify-between gap-2 items-center">
+        {/* <div className="flex justify-between gap-2 items-center">
           <Separator className="bg-muted-foreground w-5/12 opacity-40" />
           <p className="text-base">Ou</p>
           <Separator className="bg-muted-foreground w-5/12 opacity-40" />
-        </div>
+        </div> */}
 
         {/* GOOGLE BUTTON */}
-        <Button
+        {/* <Button
           disabled={loading}
           variant={"outline"}
           className="w-full flex gap-2 text-base font-normal shadow-sm hover:shadow-md transition-all duration-200"
           onClick={handleGoogleLogin}
         >
-          {/* <Image src={iconGoogle2} alt="google.svg" width={30} height={30} /> */}
+          <Image src={iconGoogle2} alt="google.svg" width={30} height={30} />
           Continuar com Google
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

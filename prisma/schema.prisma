@@ -14,9 +14,9 @@ model User {
   email         String?        @unique
   emailVerified DateTime?      @map("email_verified")
   image         String?
-  typeUserId    String?
+  typeUser      String?
   password      String?
-  
+
   AcademicWork  AcademicWork[]
   Comment       Comment[]
   Diary         Diary[]
@@ -24,15 +24,8 @@ model User {
   Subscription  Subscription[]
   accounts      Account[]
   sessions      Session[]
-  TypeUser      TypeUser?      @relation(fields: [typeUserId], references: [id], onDelete: Cascade)
 
   @@map("users")
-}
-
-model TypeUser {
-  id   String @id @default(cuid())
-  name String
-  User User[]
 }
 
 model Event {
@@ -43,6 +36,7 @@ model Event {
   endDate      DateTime?
   location     String
   imageId      String
+
   Diary        Diary[]
   Image        Image          @relation(fields: [imageId], references: [id], onDelete: Cascade)
   Subscription Subscription[]
@@ -60,6 +54,7 @@ model AcademicWork {
   description String?
   image       String?
   userId      String
+
   User        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   Comment     Comment[]
   Rating      Rating[]
@@ -70,6 +65,7 @@ model Rating {
   rating         Float
   userId         String
   academicWorkId String
+
   AcademicWork   AcademicWork @relation(fields: [academicWorkId], references: [id], onDelete: Cascade)
   User           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -79,6 +75,7 @@ model Subscription {
   date    DateTime
   userId  String
   eventId String
+
   Event   Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   User    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -90,6 +87,7 @@ model Diary {
   description String
   eventId     String
   userId      String
+
   Event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -100,6 +98,7 @@ model Comment {
   comment        String
   userId         String
   academicWorkId String
+
   AcademicWork   AcademicWork @relation(fields: [academicWorkId], references: [id], onDelete: Cascade)
   User           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -117,6 +116,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
+
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
@@ -128,6 +128,7 @@ model Session {
   sessionToken String   @unique @map("session_token")
   userId       String   @map("user_id")
   expires      DateTime
+  
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")

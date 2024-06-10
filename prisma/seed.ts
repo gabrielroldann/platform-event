@@ -1,27 +1,27 @@
-const { PrismaClient } = require("@prisma/client");
+// const { PrismaClient } = require("@prisma/client");
 
-const db = new PrismaClient();
+// const db = new PrismaClient();
 
-const types = [{ name: "Administrador" }, { name: "Participante" }];
+// const types = [{ name: "Administrador" }, { name: "Participante" }];
 
-async function seed() {
-  try {
-    await db.typeUser.deleteMany();
+// async function seed() {
+//   try {
+//     await db.typeUser.deleteMany();
 
-    for (const type of types) {
-      await db.typeUser.create({
-        data: {
-          name: type.name,
-        },
-      });
-    }
+//     for (const type of types) {
+//       await db.typeUser.create({
+//         data: {
+//           name: type.name,
+//         },
+//       });
+//     }
 
-    console.log("Seed concluído com sucesso!");
-  } catch (error) {
-    console.error(error);
-  } finally {
-    await db.$disconnect();
-  }
-}
+//     console.log("Seed concluído com sucesso!");
+//   } catch (error) {
+//     console.error(error);
+//   } finally {
+//     await db.$disconnect();
+//   }
+// }
 
-seed();
+// seed();

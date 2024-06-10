@@ -41,7 +41,7 @@ const EventCard = ({
     <>
       <Card
         className="min-w-72 max-w-72 min-h-64 max-h-64 p-0 border-none shadow-none duration-300 hover:scale-95 cursor-pointer"
-        // onClick={handleClickEventCard}
+        onClick={handleClickEventCard}
       >
         <CardHeader className="p-0 h-3/5 overflow-hidden rounded-xl">
           <img

@@ -32,21 +32,46 @@ const Login = ({ animation, changeAnimation }: LoginProps) => {
     setPwVisible(!pwVisible);
   };
 
-  const handleCredentialLogin = () => {
-    signIn("credentials", {
-      redirect: true,
-      callbackUrl: "/",
-      email: email,
-      password: password,
-    });
+  const handleCredentialLogin = async () => {
+    if (!email) {
+      return toast.info("Preencha o campo de email", { duration: 3000 });
+    }
+    if (!password) {
+      return toast.info("Preencha o campo de senha", { duration: 3000 });
+    }
+
+    try {
+      setLoading(true);
+      await signIn("credentials", {
+        redirect: false,
+        email: email,
+        password: password,
+      }).then((data) => {
+        if (data?.error) {
+          return toast.error(data.error, { duration: 3000 });
+        }
+
+        if (data?.ok) {
+          toast.success("Login efetuado com sucesso!", {
+            description: "Redirecionando...",
+            duration: 3000,
+          });
+          router.push("/");
+        }
+      });
+    } catch (error) {
+      return toast.error("Credenciais inválidas", { duration: 3000 });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleGoogleLogin = () => {
-    signIn("google");
-  };
+  // const handleGoogleLogin = () => {
+  //   signIn("google");
+  // };
 
   return (
-    <div className={` ${animation} animate__faster`}>
+    <div className={`${animation} animate__faster`}>
       <div className="mb-3">
         <div className="text-2xl font-normal">Login</div>
         <div className="text-muted-foreground">
@@ -102,7 +127,11 @@ const Login = ({ animation, changeAnimation }: LoginProps) => {
           variant={"default"}
           onClick={handleCredentialLogin}
         >
-          {loading ? <Loader size={24} className="animate-spin" /> : "Entrar"}
+          {loading ? (
+            <Loader size={24} className="animate-spin" />
+          ) : (
+            <p className="text-base font-normal">Entrar</p>
+          )}
         </Button>
 
         <div className="flex gap-1">
@@ -116,21 +145,21 @@ const Login = ({ animation, changeAnimation }: LoginProps) => {
         </div>
 
         {/* SEPARATORS */}
-        <div className="flex justify-between gap-2 items-center">
+        {/* <div className="flex justify-between gap-2 items-center">
           <Separator className="bg-muted-foreground w-5/12 opacity-40" />
           <p className="text-base">Ou</p>
           <Separator className="bg-muted-foreground w-5/12 opacity-40" />
-        </div>
+        </div> */}
 
         {/* GOOGLE BUTTON */}
-        <Button
+        {/* <Button
           variant={"outline"}
           className="w-full flex gap-2 text-base font-normal shadow-sm hover:shadow-md transition-all duration-200"
           onClick={handleGoogleLogin}
         >
           <Image src={iconGoogle2} alt="google.svg" width={30} height={30} />
           Continuar com Google
-        </Button>
+        </Button> */}
       </div>
     </div>
   );
