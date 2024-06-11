@@ -141,8 +141,6 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
       });
 
       router.refresh();
-
-      router.push(`/event/${newEvent.id}`);
     } catch (error) {
       console.log(error);
       return;
