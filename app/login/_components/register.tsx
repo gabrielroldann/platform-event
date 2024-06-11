@@ -70,14 +70,13 @@ const Register = ({ animation, changeAnimation }: RegisterProps) => {
           }
 
           if (data?.ok) {
-            toast.success("Login efetuado com sucesso!", {
-              description: "Redirecionando...",
+            router.push("/");
+            return toast.success(user.success.message, {
+              description: "Redirecionando..",
               duration: 3000,
             });
-            router.push("/");
           }
         });
-        return toast.success(user.success.message, { duration: 3000 });
       }
     } catch (error) {
       toast.error("Erro ao registrar, contate o suporte", { duration: 3000 });
