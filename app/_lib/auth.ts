@@ -50,7 +50,13 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async session({ session, user, token }) {
       const currentUser = await fetchUser(session.user.email);
-      session.user = currentUser as { id: string; name: string; email: string };
+
+      session.user = currentUser as {
+        id: string;
+        name: string;
+        email: string;
+        typeUser: string;
+      };
       return session;
     },
     async jwt({ token, user }) {

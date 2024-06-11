@@ -26,18 +26,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { GetUser } from "../_actions/get-user";
-import { User } from "@prisma/client";
+import { GetTypeUser } from "../_actions/get-user";
 import { toast } from "sonner";
 
 const Header = () => {
   const { data } = useSession();
-  const [currentUser, setCurrentUser] = useState<User | null>();
-
-  const handleUser = async () => {
-    const user = await GetUser(data?.user.email as string);
-    setCurrentUser(user);
-  };
 
   const router = useRouter();
 
@@ -63,7 +56,14 @@ const Header = () => {
     setOpenLogout(false);
   };
 
-  const handlePublicarEvento = () => {
+  const handlePublicarEvento = async () => {
+    const user = await GetTypeUser({
+      email: data?.user.email as string,
+    });
+
+    if (user?.typeUser === "Participante") {
+      return toast.error("Você não tem permissão para publicar eventos");
+    }
     if (data) {
       setOpen(true);
     } else {
@@ -107,13 +107,13 @@ const Header = () => {
               UNIFOR EVENTS
             </p>
           </div>
-            <Button
-              variant={"ghost"}
-              className="text-base underline text-[#044CF4] hover:text-[#044CF4] hover:no-underline font-medium"
-              onClick={handleClickAllEvents}
-            >
-              Todos os Eventos Disponíveis
-            </Button>
+          <Button
+            variant={"ghost"}
+            className="text-base underline text-[#044CF4] hover:text-[#044CF4] hover:no-underline font-medium"
+            onClick={handleClickAllEvents}
+          >
+            Todos os Eventos Disponíveis
+          </Button>
         </div>
         <div className="flex gap-4 items-center">
           <Button
@@ -123,6 +123,7 @@ const Header = () => {
           >
             Publicar Evento
           </Button>
+          {/* {data?.user.} */}
           <CreateEventDialog open={open} setOpen={setOpen} />
           {data ? (
             <div className="flex gap-2 items-center">

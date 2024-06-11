@@ -132,10 +132,9 @@ const Perfil = () => {
       }
 
       if (user.success !== undefined) {
+        setEditPasswordOpen(false);
         return toast.success(user.success.message, { duration: 3000 });
       }
-
-      setEditPasswordOpen(false);
     } catch (error) {
       return toast.error("Erro ao trocar a senha, contate o suporte", {
         duration: 3000,

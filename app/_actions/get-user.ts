@@ -1,6 +1,12 @@
+"use server";
+
 import { db } from "../_lib/prisma";
 
-export const GetUser = async (email: string) => {
+interface SubscriptionParams {
+  email: string;
+}
+
+export const GetTypeUser = async ({ email }: SubscriptionParams) => {
   const user = await db.user.findUnique({
     where: {
       email: email,

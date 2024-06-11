@@ -1,18 +1,17 @@
 "use server";
 
 import Header from "@/app/_components/header";
-import { Button } from "@/app/_components/ui/button";
 import { authOptions } from "@/app/_lib/auth";
 import { db } from "@/app/_lib/prisma";
 import { Calendar, ChevronLeft } from "lucide-react";
 import { getServerSession } from "next-auth";
-import Image from "next/image";
 import NotFound from "../_components/not-found";
 import { Badge } from "@/app/_components/ui/badge";
-import { format, formatDate } from "date-fns";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import FAQ from "@/app/_components/faq";
 import ShowEvents from "@/app/_components/show-events";
+import ButtonSubscription from "../_components/button-subscription";
 
 interface EventPageParams {
   params: {
@@ -73,7 +72,12 @@ const EventPage = async ({ params }: EventPageParams) => {
               <div className="self-start mt-4 w-full flex flex-col gap-4">
                 <div className="w-full flex justify-between items-center">
                   <p className="text-4xl font-normal">{currentEvent.title}</p>
-                  <Button className="text-lg font-normal">Inscrever-se</Button>
+                  {session && (
+                    <ButtonSubscription
+                      id={params.id}
+                      userId={session.user.id}
+                    />
+                  )}
                 </div>
                 <Badge className="w-fit font-normal text-sm">
                   {currentEvent.location.toUpperCase()}
