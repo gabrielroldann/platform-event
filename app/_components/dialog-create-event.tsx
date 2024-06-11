@@ -140,8 +140,6 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         imageId: newImageId,
       });
 
-      router.refresh();
-
       router.push(`/event/${newEvent.id}`);
     } catch (error) {
       console.log(error);
