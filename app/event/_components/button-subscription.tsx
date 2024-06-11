@@ -12,9 +12,14 @@ import { toast } from "sonner";
 interface ButtonSubscriptionProps {
   id: string;
   userId: string;
+  endDate?: Date | null | undefined;
 }
 
-const ButtonSubscription = ({ id, userId }: ButtonSubscriptionProps) => {
+const ButtonSubscription = ({
+  id,
+  userId,
+  endDate,
+}: ButtonSubscriptionProps) => {
   const [loading, setLoading] = useState(false);
 
   const handleSubscription = async () => {
@@ -26,6 +31,11 @@ const ButtonSubscription = ({ id, userId }: ButtonSubscriptionProps) => {
     if (check) {
       return toast.error("Você já está inscrito neste evento");
     }
+
+    if (endDate && new Date() >= endDate) {
+      return toast.error("Inscrições encerradas");
+    }
+
     try {
       setLoading(true);
       await SaveSubscription({

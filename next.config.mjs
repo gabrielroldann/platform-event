@@ -7,6 +7,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
+      {
+        protocol: "https",
+        hostname: "savefiles-local.s3.us-east-2.amazonaws.com",
+      },
     ],
   },
 };
