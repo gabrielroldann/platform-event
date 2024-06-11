@@ -3,8 +3,6 @@
 import { Button } from "../../_components/ui/button";
 import { Input } from "../../_components/ui/input";
 import { Label } from "../../_components/ui/label";
-import { Separator } from "../../_components/ui/separator";
-import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { Eye, EyeOff, Loader } from "lucide-react";
@@ -12,7 +10,6 @@ import { RegisterUser } from "../../_actions/register";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "@/app/_components/ui/radio-group";
-import iconGoogle2 from "../../../public/iconGoogle2.svg";
 
 interface RegisterProps {
   animation: string;
@@ -63,17 +60,29 @@ const Register = ({ animation, changeAnimation }: RegisterProps) => {
       }
 
       if (user.success !== undefined) {
+        await signIn("credentials", {
+          callbackUrl: "/",
+          email,
+          password,
+        }).then((data) => {
+          if (data?.error) {
+            return toast.error(data.error, { duration: 3000 });
+          }
+
+          if (data?.ok) {
+            toast.success("Login efetuado com sucesso!", {
+              description: "Redirecionando...",
+              duration: 3000,
+            });
+            router.push("/");
+          }
+        });
         return toast.success(user.success.message, { duration: 3000 });
       }
     } catch (error) {
       toast.error("Erro ao registrar, contate o suporte", { duration: 3000 });
     } finally {
       setLoading(false);
-      await signIn("credentials", {
-        callbackUrl: "/",
-        email,
-        password,
-      });
     }
   };
 
