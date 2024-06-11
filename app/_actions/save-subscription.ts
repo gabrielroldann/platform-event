@@ -31,5 +31,5 @@ export const CheckSubscription = async (params: CheckSubscriptionParams) => {
       eventId: params.eventId,
     },
   });
-  return subscription ? true : false;
+  return subscription;
 };

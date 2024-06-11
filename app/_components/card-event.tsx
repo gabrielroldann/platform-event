@@ -4,6 +4,7 @@ import { formatDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface EventCardProps {
   id: string;
@@ -44,9 +45,11 @@ const EventCard = ({
         onClick={handleClickEventCard}
       >
         <CardHeader className="p-0 h-3/5 overflow-hidden rounded-xl">
-          <img
+          <Image
             src={url}
             alt={"imagem"}
+            width={288}
+            height={192}
             className="rounded-tr-xl rounded-tl-xl object-cover object-center w-full h-full"
           />
         </CardHeader>

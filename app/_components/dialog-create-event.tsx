@@ -110,8 +110,6 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         checksum
       );
 
-      console.log(signedUrlResult);
-
       if (signedUrlResult.error !== undefined) {
         return toast.error(
           "Ocorreu um erro ao publicar evento, tente novamente!",
