@@ -21,7 +21,6 @@ const Search = () => {
     }
   }, [searchValue]);
 
-  console.log(searchValue);
   const enterClicked = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSearch();

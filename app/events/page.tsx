@@ -7,9 +7,11 @@ import Header from "../_components/header";
 import Search from "../_components/search";
 import BodyAllEvents from "./_components/show-all-events";
 import { authOptions } from "../_lib/auth";
+import ShowEvents from "../_components/show-events";
 
-const AllEventsPage = () => {
-  const session = getServerSession(authOptions);
+const AllEventsPage = async () => {
+  const session = await getServerSession(authOptions);
+  console.log("/events session: ", session?.user);
 
   return (
     <div>
@@ -21,6 +23,10 @@ const AllEventsPage = () => {
           <Search />
           <div className="w-full flex flex-col gap-4">
             <BodyAllEvents />
+            <div className="flex flex-col gap-3 mt-8">
+              <p className="text-2xl font-medium">Sugestões</p>
+              <ShowEvents />
+            </div>
           </div>
           <div className="mt-8">
             <FAQ />

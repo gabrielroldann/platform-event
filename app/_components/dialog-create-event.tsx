@@ -53,7 +53,6 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
   });
 
   const { from, to } = date ?? {};
-  console.log(from as Date, to as Date);
 
   const initiallySelectedDates = [eventStartDate, eventEndDate];
   const [selectedDates, setSelectedDates] = useState(initiallySelectedDates);
@@ -97,18 +96,12 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         !image ||
         selectedDates.length === 0
       ) {
-        return toast.info("Preencha todos os campos para criar o evento!", {
-          duration: 2500,
-        });
+        return;
       }
 
       setPopOpen(false);
       setOpen(false);
       setLoading(true);
-
-      // if (selectedDates[0].getTime < selectedDates[1].getTime) {
-      //   selectedDates[1] = selectedDates[0];
-      // }
 
       const checksum = await computeSHA256(image);
       const signedUrlResult = await getSignedURL(
@@ -117,9 +110,11 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         checksum
       );
 
+      console.log(signedUrlResult);
+
       if (signedUrlResult.error !== undefined) {
         return toast.error(
-          "Ocorreu um erro ao criar evento, tente novamente!",
+          "Ocorreu um erro ao publicar evento, tente novamente!",
           {
             duration: 2500,
           }
@@ -143,28 +138,37 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
         endDate: to as Date,
         location: location,
         imageId: newImageId,
-        userId: (data?.user as any).id,
       });
 
       router.refresh();
 
-      // router.push(`/event/${newEvent.id}`);
+      router.push(`/event/${newEvent.id}`);
     } catch (error) {
       console.log(error);
-      toast.error("Ocorreu um erro ao criar evento, tente novamente!", {
-        description: "Se o erro persistir entre em contato com o suporte.",
-        duration: 2500,
-      });
+      return;
     } finally {
       setLoading(false);
     }
   };
 
   const submit = () => {
+    if (
+      !title ||
+      !description ||
+      !location ||
+      !image ||
+      !date ||
+      selectedDates.length === 0
+    ) {
+      return toast.info("Preencha todos os campos para publicar o evento!", {
+        duration: 2500,
+      });
+    }
     toast.promise(handleCreateEvent, {
-      loading: "Criando evento...",
-      success: "Evento criado com sucesso!",
-      error: "Ocorreu um erro ao criar evento, tente novamente!",
+      loading: "Publicando evento...",
+      success: "Evento publicado com sucesso!",
+      description: "Redirecionando para a página do evento...",
+      error: "Ocorreu um erro ao publicar o evento, tente novamente!",
     });
   };
 
@@ -202,7 +206,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
               id="image"
               type="file"
               placeholder="Foto do Evento"
-              className="text-lg h-40"
+              className="text-lg text-center"
               onChange={handleChange}
             />
           </div>
@@ -281,6 +285,7 @@ const CreateEventDialog = ({ open, setOpen }: CreateEventDialogProps) => {
                 <Calendar
                   disabled={loading}
                   initialFocus
+                  fromDate={new Date()}
                   mode="range"
                   defaultMonth={date?.from}
                   selected={date}

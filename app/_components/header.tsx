@@ -3,13 +3,11 @@
 import Image from "next/image";
 import uniforlogo from "../../public/uniforlogo.svg";
 import { Button } from "./ui/button";
-import { signOut, useSession } from "next-auth/react";
-import { Loader, LogOut } from "lucide-react";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { Loader, LogOut, UserCircle2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CreateEventDialog from "./dialog-create-event";
-import AuthDialog from "./register-login";
-import ConfirmLogoutDialog from "./confirm-logout";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -19,25 +17,62 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
+import { Avatar, AvatarImage } from "./ui/avatar";
+import Perfil from "./perfil";
+import { Dialog, DialogContent } from "./ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import { GetTypeUser } from "../_actions/get-user";
+import { toast } from "sonner";
 
 const Header = () => {
   const { data } = useSession();
+
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [openLogout, setOpenLogout] = useState(false);
 
+  const [openPerfil, setOpenPerfil] = useState(false);
+
+  const escClicked = (e: KeyboardEvent) => {
+    e.preventDefault();
+  };
+
+  const mouseOut = (e: PointerEvent) => {
+    e.preventDefault();
+  };
+
+  const handleOpenPerfil = () => {
+    setOpenPerfil(true);
+  };
+
   const handleCloseAlertDialogLogout = () => {
     setOpenLogout(false);
   };
 
-  const handlePublicarEvento = () => {
-    setOpen(true);
+  const handlePublicarEvento = async () => {
+    const user = await GetTypeUser({
+      email: data?.user.email as string,
+    });
+
+    if (user?.typeUser === "Participante") {
+      return toast.error("Você não tem permissão para publicar eventos");
+    }
+    if (data) {
+      setOpen(true);
+    } else {
+      router.push("/login");
+    }
   };
 
-  const handleLogin = () => {
-    setOpen(true);
+  const handleAuth = () => {
+    signIn();
   };
 
   const handleLogout = () => {
@@ -72,20 +107,15 @@ const Header = () => {
               UNIFOR EVENTS
             </p>
           </div>
-          <div className="flex gap-1">
-            <Button variant={"ghost"} className="text-base font-medium">
-              Precisa de Ajuda?
-            </Button>
-            <Button
-              variant={"ghost"}
-              className="text-base underline text-[#044CF4] hover:text-[#044CF4] hover:no-underline font-medium"
-              onClick={handleClickAllEvents}
-            >
-              Todos os Eventos Disponíveis
-            </Button>
-          </div>
+          <Button
+            variant={"ghost"}
+            className="text-base underline text-[#044CF4] hover:text-[#044CF4] hover:no-underline font-medium"
+            onClick={handleClickAllEvents}
+          >
+            Todos os Eventos Disponíveis
+          </Button>
         </div>
-        <div className="flex gap-6 items-center">
+        <div className="flex gap-4 items-center">
           <Button
             variant={"default"}
             className="text-base font-medium bg-[#044CF4]"
@@ -93,23 +123,49 @@ const Header = () => {
           >
             Publicar Evento
           </Button>
-          {data && open === true ? (
-            <CreateEventDialog open={open} setOpen={setOpen} />
-          ) : (
-            <AuthDialog open={open} setOpen={setOpen} />
-          )}
+          {/* {data?.user.} */}
+          <CreateEventDialog open={open} setOpen={setOpen} />
           {data ? (
             <div className="flex gap-2 items-center">
-              {/* <Avatar>
-                <AvatarImage src={data?.user?.image as any} />
-              </Avatar> */}
-              <Image
-                src={data?.user?.image as any}
-                alt={data?.user?.name as string}
-                width={30}
-                height={26}
-                className="rounded-full cursor-pointer"
-              />
+              {data.user.image ? (
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Avatar>
+                        <AvatarImage
+                          src={data?.user?.image as string}
+                          alt={data?.user?.name}
+                          onClick={handleOpenPerfil}
+                          className="cursor-pointer"
+                        />
+                      </Avatar>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Perfil</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <UserCircle2 size={36} onClick={handleOpenPerfil} />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Perfil</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+              <Dialog
+                modal={true}
+                open={openPerfil}
+                onOpenChange={setOpenPerfil}
+              >
+                <DialogContent onEscapeKeyDown={escClicked}>
+                  <Perfil />
+                </DialogContent>
+              </Dialog>
               <AlertDialog open={openLogout} onOpenChange={setOpenLogout}>
                 <AlertDialogTrigger asChild>
                   <Button
@@ -161,9 +217,9 @@ const Header = () => {
             <Button
               variant={"link"}
               className="text-black text-base font-medium"
-              onClick={handleLogin}
+              onClick={handleAuth}
             >
-              Fazer Login
+              Fazer Login / Cadastrar
             </Button>
           )}
         </div>

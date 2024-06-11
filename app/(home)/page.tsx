@@ -10,13 +10,7 @@ import Footer from "../_components/footer";
 export default async function Home() {
   const session = await getServerSession(authOptions);
 
-  console.log(session);
-
-  // TODO: separar dialog de registro e dialog de login
-  // TODO: criar evento com imagem e ver se funciona no card
-  // TODO: criar card e página de evento
   // TODO: criar pagina de todos os eventos / pagina de buscar de eventos
-  // TODO: autenticar usuário com credentials
 
   return (
     <div>

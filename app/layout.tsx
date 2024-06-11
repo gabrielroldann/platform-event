@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className={`${font.className} [&::-webkit-scrollbar]:hidden`}>
+      <body className={`${font.className} scrollbar-webkit scrollbar-thumb`}>
         <AuthProvider>
           {children}
           <Toaster

@@ -10,7 +10,6 @@ interface Event {
   startDate: Date;
   endDate: Date | null;
   location: string;
-  userId: string;
   imageId: string;
   Image: Image;
 }
